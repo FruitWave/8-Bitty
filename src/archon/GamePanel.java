@@ -63,7 +63,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameState() {
 		if (atari != null) {
 			if (morrow.y < 0) {
-				morrow.playeryspeedAdder = 2;
+				morrow.playeryspeedAdder = -morrow.playeryspeedAdder;
 			}
 			atari.update();
 			atari.checkCollision();
@@ -72,7 +72,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			// currentState = END_STATE;
 			// score = atari.getScore();
 			// atari.reset();
-			// tardis = new TARDIS(250, 700, 50, 50);
+			// tardis = new TARDIS(250, 700, 25, 25);
 			// atari.addObject(tardis);
 			// }
 			if (morrow.isAlive == false) {
@@ -90,18 +90,29 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			atari.draw(elevi);
 		}
 		elevi.setColor(Color.CYAN);
-		elevi.drawString("" + morrow.yspeed, 100, 50);
-		elevi.drawString("" + morrow.xspeed, 200, 50);
+		elevi.drawString("" + morrow.yspeed, 100, 25);
+		elevi.drawString("" + morrow.xspeed, 200, 25);
+	}
+
+	void drawEndState(Graphics elevi) {
+		elevi.setColor(Color.BLUE);
+		elevi.fillRect(0, 0, Runner.width, Runner.height);
+		if (atari != null) {
+			atari.draw(elevi);
+		}
+		elevi.setColor(Color.CYAN);
+		elevi.drawString("" + morrow.yspeed, 100, 25);
+		elevi.drawString("" + morrow.xspeed, 200, 25);
 	}
 
 	public void startGame() {
-		morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
-		sixer = new Enemy(Runner.width - 100, 300, 50, 50);
-		initial_friendly = new Block(100, 400, 50, 50, false, true);
-		initial_enemy = new Block(Runner.width - 100, 400, 50, 50, false, true);
-//		for (int i = 0; i < array.length; i++) {
-//			
-//		}
+		morrow = new PlayerOne(100, 300, 25, 25, true, this, atari);
+		sixer = new Enemy(Runner.width - 100, 300, 25, 25);
+		initial_friendly = new Block(100, 400, 25, 25, false, true);
+		initial_enemy = new Block(Runner.width - 100, 400, 25, 25, false, true);
+		// for (int i = 0; i < array.length; i++) {
+		//
+		// }
 		atari = new GameManager();
 		atari.addObject(morrow);
 		atari.addObject(sixer);

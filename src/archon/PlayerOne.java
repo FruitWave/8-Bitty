@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
@@ -17,6 +18,7 @@ public class PlayerOne extends GameObject implements ActionListener {
 	int xspeed;
 	GamePanel panelope;
 	boolean mani_to_player1_there_is_no_collision = true;
+	static Timer turngravbackon;
 
 	public PlayerOne(int x, int y, int width, int height, boolean gravAffectedMaster, GamePanel panelope,
 			GameManager master) {
@@ -26,6 +28,8 @@ public class PlayerOne extends GameObject implements ActionListener {
 		playeryspeedAdder = 0;
 		playerxspeedAdder = 0;
 		this.panelope = panelope;
+		turngravbackon = new Timer(10000, this);
+		turngravbackon.setInitialDelay(250);
 	}
 
 	/*
@@ -41,10 +45,10 @@ public class PlayerOne extends GameObject implements ActionListener {
 	public void update() {
 		super.update();
 		if (mani_to_player1_there_is_no_collision) {
-			gravispeed = GameObject.gravispeed;
+			gravispeed = 1;
 		} else if (!mani_to_player1_there_is_no_collision) {
 			gravispeed = 0;
-			JOptionPane.showMessageDialog(null, "GRAVI DISABLED");
+			//JOptionPane.showMessageDialog(null, "GRAVI DISABLED");
 		}
 
 		yspeed = playeryspeedAdder;
@@ -70,7 +74,6 @@ public class PlayerOne extends GameObject implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-
+		mani_to_player1_there_is_no_collision = true;
 	}
 }

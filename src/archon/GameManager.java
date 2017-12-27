@@ -75,20 +75,21 @@ public class GameManager {
 					}
 					if (((o1 instanceof PlayerOne) && (o2 instanceof Block))
 							|| ((o2 instanceof PlayerOne) && (o1 instanceof Block))) {
-						System.out.println("Collision.");
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
 						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
+						//System.out.println("Collision. Y speed is " + oork.yspeed);
 						oork.playeryspeedAdder = 0;
+						oork.gravispeed = 0;
 						GamePanel.fallnow.stop();
-						GamePanel.fallnowcount = 0;
+						GamePanel.fallnowcount = 1;
 						GamePanel.morrow.mani_to_player1_there_is_no_collision = false;
 						if (!GamePanel.upbutton && (doofon.y > oork.y)) {
 							oork.y = doofon.y - oork.height;
 						}
 					}
 				} else {
-
-					GamePanel.morrow.mani_to_player1_there_is_no_collision = true;
+					PlayerOne.turngravbackon.restart();
+					
 				}
 			}
 		}
