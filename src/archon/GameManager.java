@@ -67,15 +67,22 @@ public class GameManager {
 					 * o1 instanceof PlayerOne)) { o1.isAlive = false; o2.isAlive = false; }
 					 */
 
-					if (o1 instanceof Block) {
+					if ((o1 instanceof Block) && (o2 instanceof Block)) {
 						Block doofon = (Block) o1;
-						GameObject oork = (o2 instanceof Block) ? (Block) o2
-								: ((o2 instanceof PlayerOne) ? (PlayerOne) o2 : (Projectile) o2);
-						if (oork instanceof Projectile) {
-							System.err
-									.println("Object o2 in collision with " + doofon + "was not a Block or PlayerOne!");
-						}
+						GameObject oork = (Block) o2;
 						doofon.y = (doofon.y / 2) < (oork.y / 2) ? oork.y - doofon.height : oork.y + oork.height;
+
+						if ((doofon.y / 2) < (oork.y / 2)) {
+							doofon.forcesEnact = false;
+						} else if (oork.y < doofon.y) {
+							oork.forcesEnact = false;
+						}
+					} else if (((o1 instanceof PlayerOne) && (o2 instanceof Block))
+							|| ((o2 instanceof PlayerOne) && (o1 instanceof Block))) {
+						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
+						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
+						doofon.y = (doofon.y / 2) < (oork.y / 2) ? oork.y - doofon.height : oork.y + oork.height;
+
 						if ((doofon.y / 2) < (oork.y / 2)) {
 							doofon.forcesEnact = false;
 						} else if (oork.y < doofon.y) {

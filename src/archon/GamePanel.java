@@ -18,6 +18,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Enemy sixer;
 	Block initial_friendly;
 	Block initial_enemy;
+	int jumpPluses = 200;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -33,21 +34,37 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			morrow.playeryspeedAdder--;
+			morrow.jumping = true;
+
+			// if ((morrow.y + morrow.height) == Runner.height) {
+			// morrow.y -= 30;
+			// }
+
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			morrow.playeryspeedAdder++;
+			if (morrow.playeryspeedAdder < 6) {
+				morrow.playeryspeedAdder++;
+			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			morrow.playerxspeedAdder--;
+			if (morrow.playeryspeedAdder > -6) {
+				morrow.playerxspeedAdder--;
+			}
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			morrow.playerxspeedAdder++;
+			if (morrow.playeryspeedAdder < 6) {
+				morrow.playerxspeedAdder++;
+			}
 		}
+		if (e.getKeyCode() == KeyEvent.VK_B) {
+			morrow.yspeed = 0;
+			morrow.xspeed = 0;
+		}
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (morrow != null) {
-			// morrow.playerxspeedAdder = 0;
+			morrow.playerxspeedAdder = 0;
 			// morrow.playeryspeedAdder = 0;
 		}
 	}
@@ -73,16 +90,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void drawGameState(Graphics elevi) {
+		elevi.setColor(Color.BLACK);
+		elevi.fillRect(0, 0, Runner.width, Runner.height);
 		if (atari != null) {
-
-			elevi.setColor(Color.BLACK);
-			elevi.fillRect(0, 0, Runner.width, Runner.height);
 			atari.draw(elevi);
 		}
 	}
 
 	public void startGame() {
-		morrow = new PlayerOne(100, 300, 50, 50);
+		morrow = new PlayerOne(100, 300, 50, 50, this);
 		sixer = new Enemy(Runner.width - 100, 300, 50, 50);
 		initial_friendly = new Block(Runner.width / 2, 100, 50, 50);
 		initial_enemy = new Block(Runner.width / 2, 500, 50, 50);

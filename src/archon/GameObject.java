@@ -9,7 +9,7 @@ public abstract class GameObject {
 	int width;
 	int height;
 	boolean isAlive = true;
-	public int gravispeed = 2;
+	public int gravispeed = 5;
 	public boolean gravitEnact;
 	public boolean forcesEnact;
 	Rectangle collisionArea = new Rectangle(x, y, width, height);

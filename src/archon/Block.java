@@ -26,6 +26,9 @@ public class Block extends GameObject {
 			System.out.println("Corrected to " + y);
 			System.out.println("Height is " + height);
 			gravitEnact = false;
+			/*
+			 * figure out "Correcting Block from 50, Corrected to 993, Height is 50" problem
+			 */
 		}
 	}
 
