@@ -1,6 +1,5 @@
 package archon;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -10,6 +9,9 @@ public abstract class GameObject {
 	int width;
 	int height;
 	boolean isAlive = true;
+	public int gravispeed = 2;
+	public boolean gravitEnact;
+	public boolean forcesEnact;
 	Rectangle collisionArea = new Rectangle(x, y, width, height);
 
 	public GameObject(int x, int y, int width, int height) {

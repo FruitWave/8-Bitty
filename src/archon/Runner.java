@@ -5,9 +5,12 @@ import javax.swing.JFrame;
 public class Runner {
 	JFrame sym;
 
-	static final int width = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
-	static final int height = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-
+	// static final int width =
+	// java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+	// static final int height =
+	// java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+	static final int width = 1912;
+	static final int height = 1043;
 	GamePanel panelope;
 
 	public Runner() {

@@ -1,10 +1,12 @@
 package archon;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -14,15 +16,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	GameManager atari;
 	PlayerOne morrow;
 	Enemy sixer;
+	Block initial_friendly;
+	Block initial_enemy;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
-	}
-
-	public void updateGameState() {
-		if (atari != null) {
-			atari.update();
-		}
 	}
 
 	@Override
@@ -33,25 +31,77 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			morrow.playeryspeedAdder--;
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			morrow.playeryspeedAdder++;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			morrow.playerxspeedAdder--;
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			morrow.playerxspeedAdder++;
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		if (morrow != null) {
+			// morrow.playerxspeedAdder = 0;
+			// morrow.playeryspeedAdder = 0;
+		}
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+	void updateGameState() {
+		if (atari != null) {
+			atari.update();
+			atari.checkCollision();
+			atari.manageEnemies();
+			// if (morrow.isAlive == false) {
+			// currentState = END_STATE;
+			// score = atari.getScore();
+			// atari.reset();
+			// tardis = new TARDIS(250, 700, 50, 50);
+			// atari.addObject(tardis);
+			// }
+			if (morrow.isAlive == false) {
+				for (int i = 0; i > -1; i++) {
+					JOptionPane.showMessageDialog(null, "No lives remaining.");
+				}
+			}
+		}
+	}
 
+	void drawGameState(Graphics elevi) {
+		if (atari != null) {
+
+			elevi.setColor(Color.BLACK);
+			elevi.fillRect(0, 0, Runner.width, Runner.height);
+			atari.draw(elevi);
+		}
 	}
 
 	public void startGame() {
+		morrow = new PlayerOne(100, 300, 50, 50);
+		sixer = new Enemy(Runner.width - 100, 300, 50, 50);
+		initial_friendly = new Block(Runner.width / 2, 100, 50, 50);
+		initial_enemy = new Block(Runner.width / 2, 500, 50, 50);
+		atari = new GameManager();
+		atari.addObject(morrow);
+		atari.addObject(sixer);
+		atari.addObject(initial_friendly);
+		atari.addObject(initial_enemy);
 		masterclock.start();
 		System.out.println("Started!");
 	}
 
+	public void paintComponent(Graphics g) {
+		drawGameState(g);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		repaint();
+		updateGameState();
+	}
 }
