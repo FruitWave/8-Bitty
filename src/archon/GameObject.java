@@ -9,9 +9,8 @@ public abstract class GameObject {
 	int width;
 	int height;
 	boolean isAlive = true;
-	public int gravispeed = 5;
-	public boolean gravitEnact;
-	public boolean forcesEnact;
+	public static int gravispeed = 1;
+	public boolean lockedInPlace;
 	Rectangle collisionArea = new Rectangle(x, y, width, height);
 
 	public GameObject(int x, int y, int width, int height) {
@@ -23,10 +22,7 @@ public abstract class GameObject {
 
 	public void update() {
 		collisionArea.setBounds(x, y, width, height);
-		// if (y > Runner.height - height) {
-		// y = Runner.height - height;
-		// }
-		// fix sinking into floor D:
+
 	}
 
 	public void draw(Graphics g) {

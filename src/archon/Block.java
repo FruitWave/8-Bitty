@@ -4,31 +4,50 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Block extends GameObject {
+	int eternalY;
+	int eternalX;
+	boolean locked;
+	boolean gravitEnact;
 
-	public Block(int x, int y, int width, int height) {
+	public Block(int x, int y, int width, int height, boolean gravityAffected, boolean lockedInPlace) {
 		super(x, y, width, height);
-		forcesEnact = true;
-		gravitEnact = true;
+		gravitEnact = gravityAffected;
+		// if (lockedInPlace) {
+		eternalX = x;
+		eternalY = y;
+		// }
+		locked = lockedInPlace;
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		if (forcesEnact) {
+		if (!locked) {
+
 			if (gravitEnact) {
 				y += gravispeed;
 			}
+
 		}
 
 		if ((y + height) > Runner.height) {
-			System.out.println("Correcting Block from " + height);
+			// System.out.println("Correcting Block from " + height);
 			y = Runner.height - height;
-			System.out.println("Corrected to " + y);
-			System.out.println("Height is " + height);
+			// System.out.println("Corrected to " + y);
+			// System.out.println("Height is " + height);
 			gravitEnact = false;
 			/*
 			 * figure out "Correcting Block from 50, Corrected to 993, Height is 50" problem
 			 */
+		}
+
+		if (locked) {
+			// if (x != eternalX) {
+			x = eternalX;
+			// }
+			// if (y != eternalY) {
+			y = eternalY;
+			// }
 		}
 	}
 

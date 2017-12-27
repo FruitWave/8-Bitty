@@ -14,14 +14,17 @@ import javax.swing.Timer;
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer masterclock;
 	GameManager atari;
-	PlayerOne morrow;
+	static PlayerOne morrow;
 	Enemy sixer;
 	Block initial_friendly;
 	Block initial_enemy;
-	int jumpPluses = 200;
+	static Timer fallnow;
+	static int fallnowcount = 0;
+	static boolean upbutton;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
+		fallnow = new Timer(10, this);
 	}
 
 	@Override
@@ -34,31 +37,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			morrow.jumping = true;
-
-			// if ((morrow.y + morrow.height) == Runner.height) {
-			// morrow.y -= 30;
-			// }
-
-		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			if (morrow.playeryspeedAdder < 6) {
-				morrow.playeryspeedAdder++;
-			}
+			upbutton = true;
+			morrow.playeryspeedAdder--;
+			fallnow.restart();
+			System.out.println("Up");
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			if (morrow.playeryspeedAdder > -6) {
-				morrow.playerxspeedAdder--;
-			}
-		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			if (morrow.playeryspeedAdder < 6) {
-				morrow.playerxspeedAdder++;
-			}
-		}
-		if (e.getKeyCode() == KeyEvent.VK_B) {
-			morrow.yspeed = 0;
-			morrow.xspeed = 0;
-		}
+			morrow.playerxspeedAdder -= 3;
 
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+
+			morrow.playerxspeedAdder += 3;
+
+		}
 	}
 
 	@Override
@@ -71,6 +62,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	void updateGameState() {
 		if (atari != null) {
+			if (morrow.y < 0) {
+				morrow.playeryspeedAdder = 2;
+			}
 			atari.update();
 			atari.checkCollision();
 			atari.manageEnemies();
@@ -95,13 +89,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (atari != null) {
 			atari.draw(elevi);
 		}
+		elevi.setColor(Color.CYAN);
+		elevi.drawString("" + morrow.yspeed, 100, 50);
+		elevi.drawString("" + morrow.xspeed, 200, 50);
 	}
 
 	public void startGame() {
-		morrow = new PlayerOne(100, 300, 50, 50, this);
+		morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
 		sixer = new Enemy(Runner.width - 100, 300, 50, 50);
-		initial_friendly = new Block(Runner.width / 2, 100, 50, 50);
-		initial_enemy = new Block(Runner.width / 2, 500, 50, 50);
+		initial_friendly = new Block(100, 400, 50, 50, false, true);
+		initial_enemy = new Block(Runner.width - 100, 400, 50, 50, false, true);
+//		for (int i = 0; i < array.length; i++) {
+//			
+//		}
 		atari = new GameManager();
 		atari.addObject(morrow);
 		atari.addObject(sixer);
@@ -117,6 +117,26 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == fallnow) {
+			fallnowcount++;
+
+			if (fallnowcount < 5) {
+				System.out.println("less than six");
+				morrow.playeryspeedAdder -= 1;
+			} /*
+				 * else if (fallnowcount == 5) { morrow.playeryspeedAdder = 0;
+				 * System.out.println("six"); }
+				 */ else if ((fallnowcount > 4) && (fallnowcount < 10)) {
+
+				morrow.playeryspeedAdder += 1;
+				System.out.println("falling");
+			} else {
+				System.out.println("stopped");
+				fallnow.stop();
+				fallnowcount = 0;
+			}
+
+		}
 		repaint();
 		updateGameState();
 	}

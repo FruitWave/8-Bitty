@@ -2,24 +2,29 @@ package archon;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public class PlayerOne extends GameObject {
+import javax.swing.JOptionPane;
+
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
+public class PlayerOne extends GameObject implements ActionListener {
 	int playeryspeedAdder;
 	int playerxspeedAdder;
 	int yspeed;
 	int xspeed;
-	boolean jumping;
 	GamePanel panelope;
+	boolean mani_to_player1_there_is_no_collision = true;
 
-	public PlayerOne(int x, int y, int width, int height, GamePanel panelope) {
+	public PlayerOne(int x, int y, int width, int height, boolean gravAffectedMaster, GamePanel panelope,
+			GameManager master) {
 		super(x, y, width, height);
 		yspeed = 0;
 		xspeed = 0;
 		playeryspeedAdder = 0;
 		playerxspeedAdder = 0;
-		forcesEnact = true;
-		gravitEnact = true;
-		jumping = false;
 		this.panelope = panelope;
 	}
 
@@ -35,29 +40,37 @@ public class PlayerOne extends GameObject {
 	@Override
 	public void update() {
 		super.update();
-
-		if ((y + height) > Runner.height) {
-			System.out.println("Correcting player from " + y);
-			y = Runner.height - height;
-			System.out.println("Corrected to " + y);
-			System.out.println("Height is " + height);
-
+		if (mani_to_player1_there_is_no_collision) {
+			gravispeed = GameObject.gravispeed;
+		} else if (!mani_to_player1_there_is_no_collision) {
+			gravispeed = 0;
+			JOptionPane.showMessageDialog(null, "GRAVI DISABLED");
 		}
+
 		yspeed = playeryspeedAdder;
 		xspeed = playerxspeedAdder;
+		// if (gravitEnact) {
 		yspeed += gravispeed;
+		// }
+
 		y += yspeed;
 		x += xspeed;
-		if (jumping = true) {
-			y += 2;
-			x += 2;
-			panelope.jumpPluses -= 2;
-		}
+
+		/*
+		 * if (jumping == true) { y -= 2; yspeed -= 2; x += 2; panelope.jumpPluses -= 2;
+		 * }
+		 */
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		g.setColor(Color.cyan);
 		g.fillRect(x, y, width, height);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 }

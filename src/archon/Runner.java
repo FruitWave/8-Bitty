@@ -9,8 +9,8 @@ public class Runner {
 	// java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
 	// static final int height =
 	// java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-	static final int width = 1912;
-	static final int height = 1043;
+	static final int width = 1920;
+	static final int height = 1044;
 	GamePanel panelope;
 
 	public Runner() {

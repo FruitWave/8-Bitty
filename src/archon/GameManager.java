@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 public class GameManager {
 	ArrayList<GameObject> objects;
 
@@ -47,7 +49,7 @@ public class GameManager {
 
 	public void manageEnemies() {
 		if (System.currentTimeMillis() - enemyTimer >= enemySpawnTime) {
-			addObject(new Block((Runner.width / 2), 0, 50, 50));
+			// addObject(new Block((Runner.width / 2), 0, 50, 50));
 			enemyTimer = System.currentTimeMillis();
 		}
 	}
@@ -59,37 +61,34 @@ public class GameManager {
 				GameObject o2 = objects.get(j);
 
 				if (o1.collisionArea.intersects(o2.collisionArea)) {
-					/*
-					 * if ((o1 instanceof Enemy && o2 instanceof Projectile) || (o2 instanceof Enemy
-					 * && o1 instanceof Projectile)) { System.out.println("true"); score++;
-					 * System.out.println(score); o1.isAlive = false; o2.isAlive = false; } else if
-					 * ((o1 instanceof Enemy && o2 instanceof PlayerOne) || (o2 instanceof Enemy &&
-					 * o1 instanceof PlayerOne)) { o1.isAlive = false; o2.isAlive = false; }
-					 */
 
 					if ((o1 instanceof Block) && (o2 instanceof Block)) {
 						Block doofon = (Block) o1;
-						GameObject oork = (Block) o2;
-						doofon.y = (doofon.y / 2) < (oork.y / 2) ? oork.y - doofon.height : oork.y + oork.height;
+						Block oork = (Block) o2;
+						doofon.y = (doofon.y) < (oork.y) ? oork.y - doofon.height : oork.y + oork.height;
 
-						if ((doofon.y / 2) < (oork.y / 2)) {
-							doofon.forcesEnact = false;
+						if ((doofon.y) < (oork.y)) {
+							doofon.gravitEnact = false;
 						} else if (oork.y < doofon.y) {
-							oork.forcesEnact = false;
-						}
-					} else if (((o1 instanceof PlayerOne) && (o2 instanceof Block))
-							|| ((o2 instanceof PlayerOne) && (o1 instanceof Block))) {
-						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
-						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
-						doofon.y = (doofon.y / 2) < (oork.y / 2) ? oork.y - doofon.height : oork.y + oork.height;
-
-						if ((doofon.y / 2) < (oork.y / 2)) {
-							doofon.forcesEnact = false;
-						} else if (oork.y < doofon.y) {
-							oork.forcesEnact = false;
+							oork.gravitEnact = false;
 						}
 					}
+					if (((o1 instanceof PlayerOne) && (o2 instanceof Block))
+							|| ((o2 instanceof PlayerOne) && (o1 instanceof Block))) {
+						System.out.println("Collision.");
+						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
+						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
+						oork.playeryspeedAdder = 0;
+						GamePanel.fallnow.stop();
+						GamePanel.fallnowcount = 0;
+						GamePanel.morrow.mani_to_player1_there_is_no_collision = false;
+						if (!GamePanel.upbutton && (doofon.y > oork.y)) {
+							oork.y = doofon.y - oork.height;
+						}
+					}
+				} else {
 
+					GamePanel.morrow.mani_to_player1_there_is_no_collision = true;
 				}
 			}
 		}
