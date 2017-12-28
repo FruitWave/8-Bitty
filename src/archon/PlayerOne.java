@@ -19,6 +19,7 @@ public class PlayerOne extends GameObject implements ActionListener {
 	GamePanel panelope;
 	boolean mani_to_player1_there_is_no_collision = true;
 	static Timer turngravbackon;
+	static int jumpCount = 0;
 
 	public PlayerOne(int x, int y, int width, int height, boolean gravAffectedMaster, GamePanel panelope,
 			GameManager master) {
@@ -44,11 +45,14 @@ public class PlayerOne extends GameObject implements ActionListener {
 	@Override
 	public void update() {
 		super.update();
+		if (y > Runner.height) {
+			isAlive = false;
+		}
 		if (mani_to_player1_there_is_no_collision) {
 			gravispeed = 1;
 		} else if (!mani_to_player1_there_is_no_collision) {
 			gravispeed = 0;
-			//JOptionPane.showMessageDialog(null, "GRAVI DISABLED");
+			// JOptionPane.showMessageDialog(null, "GRAVI DISABLED");
 		}
 
 		yspeed = playeryspeedAdder;

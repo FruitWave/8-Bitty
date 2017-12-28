@@ -21,10 +21,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static Timer fallnow;
 	static int fallnowcount = 0;
 	static boolean upbutton;
+	static Timer respawnTimer;
+	static int currentState = 1;
+	final static int LEVEL1_STATE = 1;
+	final static int LEVEL2_STATE = 2;
+	final static int END_STATE = 3;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
 		fallnow = new Timer(10, this);
+		respawnTimer = new Timer(5000, this);
+		respawnTimer.setInitialDelay(1);
 	}
 
 	@Override
@@ -76,11 +83,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			// atari.addObject(tardis);
 			// }
 			if (morrow.isAlive == false) {
-				for (int i = 0; i > -1; i++) {
-					JOptionPane.showMessageDialog(null, "No lives remaining.");
-				}
+				respawnTimer.start();
 			}
 		}
+	}
+
+	void updateEndState() {
 	}
 
 	void drawGameState(Graphics elevi) {
@@ -97,12 +105,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawEndState(Graphics elevi) {
 		elevi.setColor(Color.BLUE);
 		elevi.fillRect(0, 0, Runner.width, Runner.height);
-		if (atari != null) {
-			atari.draw(elevi);
-		}
 		elevi.setColor(Color.CYAN);
-		elevi.drawString("" + morrow.yspeed, 100, 25);
-		elevi.drawString("" + morrow.xspeed, 200, 25);
+		elevi.drawString("You Have Died. Respawning...", Runner.width / 3, Runner.height / 2);
+
 	}
 
 	public void startGame() {
@@ -123,11 +128,33 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void paintComponent(Graphics g) {
-		drawGameState(g);
+		if (currentState == LEVEL1_STATE) {
+			drawGameState(g);
+		} else if (currentState == END_STATE) {
+			drawEndState(g);
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == respawnTimer) {
+
+			respawnTimer.stop();
+			currentState = LEVEL1_STATE;
+			atari.reset();
+			morrow = new PlayerOne(100, 300, 25, 25, true, this, atari);
+			sixer = new Enemy(Runner.width - 100, 300, 25, 25);
+			initial_friendly = new Block(100, 400, 25, 25, false, true);
+			initial_enemy = new Block(Runner.width - 100, 400, 25, 25, false, true);
+			morrow.gravispeed = 1;
+			morrow.isAlive = true;
+			atari = new GameManager();
+			atari.addObject(morrow);
+			atari.addObject(sixer);
+			atari.addObject(initial_friendly);
+			atari.addObject(initial_enemy);
+			masterclock.restart();
+		}
 		if (e.getSource() == fallnow) {
 			fallnowcount++;
 
@@ -149,6 +176,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 		}
 		repaint();
-		updateGameState();
+		if (currentState == LEVEL1_STATE) {
+			updateGameState();
+		} else if (currentState == END_STATE) {
+			updateEndState();
+		}
+
 	}
 }
