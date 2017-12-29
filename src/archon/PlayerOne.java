@@ -12,22 +12,27 @@ import javax.swing.Timer;
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 public class PlayerOne extends GameObject implements ActionListener {
-	int playeryspeedAdder;
-	int playerxspeedAdder;
+
 	int yspeed;
 	int xspeed;
 	GamePanel panelope;
 	boolean mani_to_player1_there_is_no_collision = true;
+	public boolean playeronBlock;
 	static Timer turngravbackon;
 	static int jumpCount = 0;
+	static int rotateAmount = 0;
+	static int timesdied = 0;
+	static int lives = 3;
+
+	final int eternalGravSpeed = gravispeed;
 
 	public PlayerOne(int x, int y, int width, int height, boolean gravAffectedMaster, GamePanel panelope,
 			GameManager master) {
 		super(x, y, width, height);
 		yspeed = 0;
 		xspeed = 0;
-		playeryspeedAdder = 0;
-		playerxspeedAdder = 0;
+		yspeedAdder = 0;
+		xspeedAdder = 0;
 		this.panelope = panelope;
 		turngravbackon = new Timer(10000, this);
 		turngravbackon.setInitialDelay(250);
@@ -44,19 +49,18 @@ public class PlayerOne extends GameObject implements ActionListener {
 	 */
 	@Override
 	public void update() {
+		/*
+		 * if (rotateAmount < 360) { rotateAmount++; } else { boolean cancontinue =
+		 * true; for (int i = rotateAmount; i < 360; i -= 360) { if (rotateAmount - 360
+		 * > 0) { cancontinue = true; } else { cancontinue = false; } rotateAmount = i;
+		 * }
+		 * 
+		 * }
+		 */
 		super.update();
-		if (y > Runner.height) {
-			isAlive = false;
-		}
-		if (mani_to_player1_there_is_no_collision) {
-			gravispeed = 1;
-		} else if (!mani_to_player1_there_is_no_collision) {
-			gravispeed = 0;
-			// JOptionPane.showMessageDialog(null, "GRAVI DISABLED");
-		}
 
-		yspeed = playeryspeedAdder;
-		xspeed = playerxspeedAdder;
+		yspeed = yspeedAdder;
+		xspeed = xspeedAdder;
 		// if (gravitEnact) {
 		yspeed += gravispeed;
 		// }
@@ -68,6 +72,9 @@ public class PlayerOne extends GameObject implements ActionListener {
 		 * if (jumping == true) { y -= 2; yspeed -= 2; x += 2; panelope.jumpPluses -= 2;
 		 * }
 		 */
+		if (y > Runner.height) {
+			isAlive = false;
+		}
 	}
 
 	@Override

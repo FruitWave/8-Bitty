@@ -12,6 +12,8 @@ public abstract class GameObject {
 	public int gravispeed = 1;
 	public boolean lockedInPlace;
 	Rectangle collisionArea = new Rectangle(x, y, width, height);
+	public int yspeedAdder;
+	public int xspeedAdder;
 
 	public GameObject(int x, int y, int width, int height) {
 		this.x = x;
