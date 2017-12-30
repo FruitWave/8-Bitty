@@ -8,8 +8,7 @@ public class GameManager {
 
 	private int score = 0;
 
-	long enemyTimer = 0;
-	int enemySpawnTime = 2000;
+	int enemySpawnTime = 900;
 
 	public GameManager() {
 		objects = new ArrayList<GameObject>();
@@ -45,10 +44,17 @@ public class GameManager {
 	}
 
 	public void manageEnemies() {
-		if (System.currentTimeMillis() - enemyTimer >= enemySpawnTime) {
-			addObject(new Projectile(GamePanel.sixer.x, GamePanel.sixer.y + (GamePanel.sixer.height / 2), 10, 5));
-			enemyTimer = System.currentTimeMillis();
+		for (int i = 0; i < objects.size(); i++) {
+			GameObject gameObject = objects.get(i);
+			if (gameObject instanceof Enemy) {
+				Enemy henry = (Enemy) gameObject;
+				if (System.currentTimeMillis() - henry.enemyTimer >= enemySpawnTime) {
+					addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5));
+					henry.enemyTimer = System.currentTimeMillis();
+				}
+			}
 		}
+
 	}
 
 	public void checkCollision() {
@@ -96,6 +102,20 @@ public class GameManager {
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
 						oork.yspeedAdder = 0;
 						oork.enemyonBlock = true;
+					}
+
+					if ((o1 instanceof Enemy) && (o2 instanceof Enemy)) {
+
+						// System.out.println("Collision. Y speed is " + oork.yspeed);
+						if (o1.y < o2.y) {
+							o1.yspeedAdder = 0;
+							((Enemy) o1).enemyonBlock = true;
+						} else {
+							o2.yspeedAdder = 0;
+							((Enemy) o2).enemyonBlock = true;
+
+						}
+
 					}
 					if (((o1 instanceof Projectile) && (o2 instanceof Block))
 							|| ((o2 instanceof Projectile) && (o1 instanceof Block))) {

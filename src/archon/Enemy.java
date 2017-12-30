@@ -8,12 +8,14 @@ public class Enemy extends GameObject {
 	int yspeed;
 	public boolean enemyonBlock;
 	GamePanel archonian;
+	long enemyTimer = 0;
 
 	public Enemy(int x, int y, int width, int height, GamePanel archonian) {
 		super(x, y, width, height);
 		yspeed = 0;
 		xspeed = 0;
 		this.archonian = archonian;
+		gravispeed = 1;
 	}
 
 	@Override
