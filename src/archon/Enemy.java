@@ -18,7 +18,12 @@ public class Enemy extends GameObject {
 	public void update() {
 		// TODO Auto-generated method stub
 		super.update();
-		yspeed = gravispeed;
+		if (!enemyonBlock) {
+			yspeed = gravispeed;
+		} else {
+			yspeed = 0;
+		}
+
 		y += yspeed;
 		x += xspeed;
 	}

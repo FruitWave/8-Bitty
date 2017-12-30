@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		morrow.xspeedAdder /= 2;
+		morrow.xspeedAdder = 0;
 		playerupbutton = false;
 	}
 

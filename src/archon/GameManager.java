@@ -71,48 +71,42 @@ public class GameManager {
 							oork.gravitEnact = false;
 						}
 					}
-					if ((((o1 instanceof PlayerOne) && (o2 instanceof Block))
-							|| ((o2 instanceof PlayerOne) && (o1 instanceof Block)))
-							|| (((o1 instanceof Enemy) && (o2 instanceof Block))
-									|| ((o2 instanceof Enemy) && (o1 instanceof Block)))) {
+					if (((o1 instanceof PlayerOne) && (o2 instanceof Block))
+							|| ((o2 instanceof PlayerOne) && (o1 instanceof Block))) {
+						System.out.println("on");
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
-						GameObject oork;
-						if (o1 instanceof PlayerOne || o2 instanceof PlayerOne) {
-							oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
-						} else {
-							oork = o1 instanceof Enemy ? (Enemy) o1 : (Enemy) o2;
+						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
+
+						System.out.println("Collision. Y speed is " + oork.yspeed);
+						oork.yspeedAdder = 0;
+						oork.playeronBlock = true; /* unnecessary */
+
+						if (!GamePanel.playerupbutton && (doofon.y > oork.y)) {
+							oork.y = doofon.y - oork.height + 1;
+							oork.donotfall = true;
+						} else if (GamePanel.playerupbutton) {
+							oork.y = doofon.y - oork.height;
+							oork.donotfall = false;
 						}
 
+					} else {
+						GamePanel.morrow.donotfall = false;
+					}
+
+					if (((o1 instanceof Enemy) && (o2 instanceof Block))
+							|| ((o2 instanceof Enemy) && (o1 instanceof Block))) {
+						System.out.println("");
+						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
+						Enemy oork = o1 instanceof Enemy ? (Enemy) o1 : (Enemy) o2;
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
 						oork.yspeedAdder = 0;
-						if (oork instanceof PlayerOne) {
-							((PlayerOne) oork).playeronBlock = true;
-						} else if (oork instanceof Enemy) {
-							((Enemy) oork).enemyonBlock = true;
-						}
-
-						GamePanel.morrow.mani_to_player1_there_is_no_collision = false;
-						if (oork instanceof PlayerOne) {
-							if (!GamePanel.playerupbutton && (doofon.y > oork.y)) {
-								oork.y = doofon.y - oork.height + 1;
-								oork.gravispeed = ((PlayerOne) oork).eternalGravSpeed;
-							} else {
-								oork.gravispeed = 0;
-							}
-						} else if (oork instanceof Enemy) {
-							if (doofon.y > oork.y) {
-								oork.y = doofon.y - oork.height + 1;
-							}
-						}
-
+						oork.enemyonBlock = true;
 					}
-				} else {
-					// PlayerOne.turngravbackon.restart();
-					GamePanel.morrow.playeronBlock = false;
-					GamePanel.morrow.gravispeed = GamePanel.morrow.eternalGravSpeed;
+
 				}
 			}
 		}
+
 	}
 
 	public int getScore() {

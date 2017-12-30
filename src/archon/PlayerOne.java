@@ -16,14 +16,13 @@ public class PlayerOne extends GameObject implements ActionListener {
 	int yspeed;
 	int xspeed;
 	GamePanel panelope;
-	boolean mani_to_player1_there_is_no_collision = true;
 	public boolean playeronBlock;
 	static Timer turngravbackon;
 	static int jumpCount = 0;
 	static int rotateAmount = 0;
 	static int timesdied = 0;
 	static int lives = 3;
-
+	boolean donotfall = false;
 	final int eternalGravSpeed = gravispeed;
 
 	public PlayerOne(int x, int y, int width, int height, boolean gravAffectedMaster, GamePanel panelope,
@@ -61,9 +60,10 @@ public class PlayerOne extends GameObject implements ActionListener {
 
 		yspeed = yspeedAdder;
 		xspeed = xspeedAdder;
-		// if (gravitEnact) {
-		yspeed += gravispeed;
-		// }
+
+		if (!donotfall) {
+			yspeed += gravispeed;
+		}
 
 		y += yspeed;
 		x += xspeed;
@@ -85,6 +85,5 @@ public class PlayerOne extends GameObject implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		mani_to_player1_there_is_no_collision = true;
 	}
 }
