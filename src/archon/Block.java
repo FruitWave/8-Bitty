@@ -7,11 +7,9 @@ public class Block extends GameObject {
 	int eternalY;
 	int eternalX;
 	boolean locked;
-	boolean gravitEnact;
 
 	public Block(int x, int y, int width, int height, boolean gravityAffected, boolean lockedInPlace) {
 		super(x, y, width, height);
-		gravitEnact = gravityAffected;
 		// if (lockedInPlace) {
 		eternalX = x;
 		eternalY = y;
@@ -24,7 +22,7 @@ public class Block extends GameObject {
 		super.update();
 		if (!locked) {
 
-			if (gravitEnact) {
+			if (!locked) {
 				y += gravispeed;
 			}
 
@@ -35,7 +33,6 @@ public class Block extends GameObject {
 			y = Runner.height - height;
 			// System.out.println("Corrected to " + y);
 			// System.out.println("Height is " + height);
-			gravitEnact = false;
 			/*
 			 * figure out "Correcting Block from 50, Corrected to 993, Height is 50" problem
 			 */

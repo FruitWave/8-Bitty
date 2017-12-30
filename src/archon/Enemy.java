@@ -7,11 +7,13 @@ public class Enemy extends GameObject {
 	int xspeed;
 	int yspeed;
 	public boolean enemyonBlock;
+	GamePanel archonian;
 
-	public Enemy(int x, int y, int width, int height) {
+	public Enemy(int x, int y, int width, int height, GamePanel archonian) {
 		super(x, y, width, height);
 		yspeed = 0;
 		xspeed = 0;
+		this.archonian = archonian;
 	}
 
 	@Override
@@ -32,6 +34,7 @@ public class Enemy extends GameObject {
 	public void draw(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillRect(x, y, width, height);
+		g.drawLine(x, y, archonian.morrow.x, archonian.morrow.y);
 	}
 
 }

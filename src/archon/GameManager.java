@@ -9,7 +9,7 @@ public class GameManager {
 	private int score = 0;
 
 	long enemyTimer = 0;
-	int enemySpawnTime = 800;
+	int enemySpawnTime = 2000;
 
 	public GameManager() {
 		objects = new ArrayList<GameObject>();
@@ -46,7 +46,7 @@ public class GameManager {
 
 	public void manageEnemies() {
 		if (System.currentTimeMillis() - enemyTimer >= enemySpawnTime) {
-			// addObject(new Block((Runner.width / 2), 0, 50, 50));
+			addObject(new Projectile(GamePanel.sixer.x, GamePanel.sixer.y + (GamePanel.sixer.height / 2), 10, 5));
 			enemyTimer = System.currentTimeMillis();
 		}
 	}
@@ -65,19 +65,14 @@ public class GameManager {
 						Block oork = (Block) o2;
 						doofon.y = (doofon.y) < (oork.y) ? oork.y - doofon.height : oork.y + oork.height;
 
-						if ((doofon.y) < (oork.y)) {
-							doofon.gravitEnact = false;
-						} else if (oork.y < doofon.y) {
-							oork.gravitEnact = false;
-						}
 					}
 					if (((o1 instanceof PlayerOne) && (o2 instanceof Block))
 							|| ((o2 instanceof PlayerOne) && (o1 instanceof Block))) {
-						System.out.println("on");
+
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
 						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
 
-						System.out.println("Collision. Y speed is " + oork.yspeed);
+						// System.out.println("Collision. Y speed is " + oork.yspeed);
 						oork.yspeedAdder = 0;
 						oork.playeronBlock = true; /* unnecessary */
 
@@ -95,14 +90,25 @@ public class GameManager {
 
 					if (((o1 instanceof Enemy) && (o2 instanceof Block))
 							|| ((o2 instanceof Enemy) && (o1 instanceof Block))) {
-						System.out.println("");
+
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
 						Enemy oork = o1 instanceof Enemy ? (Enemy) o1 : (Enemy) o2;
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
 						oork.yspeedAdder = 0;
 						oork.enemyonBlock = true;
 					}
-
+					if (((o1 instanceof Projectile) && (o2 instanceof Block))
+							|| ((o2 instanceof Projectile) && (o1 instanceof Block))) {
+						Projectile onki = o1 instanceof Projectile ? (Projectile) o1 : (Projectile) o2;
+						onki.isAlive = false;
+					}
+					if (((o1 instanceof PlayerOne) && (o2 instanceof Projectile))
+							|| ((o2 instanceof PlayerOne) && (o1 instanceof Projectile))) {
+						PlayerOne onki = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
+						onki.isAlive = false;
+						Projectile inket = o1 instanceof Projectile ? (Projectile) o1 : (Projectile) o2;
+						inket.isAlive = false;
+					}
 				}
 			}
 		}
