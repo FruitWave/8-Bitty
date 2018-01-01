@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final static int END_STATE = 3;
 	Block lastblocktobottom;
 	Font font1;
+	double start;
 	/*
 	 * Timer enemspawne; int spawnedde;
 	 */
@@ -146,7 +147,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void drawGameState(Graphics elevi) {
-
 		elevi.setColor(Color.BLACK);
 		elevi.fillRect(0, 0, Runner.width, Runner.height);
 		if (atari != null) {
@@ -158,6 +158,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		elevi.drawString("Morrow Y-Speed:   " + morrow.yspeed, 100, 50);
 		elevi.drawString("Times Died:   " + morrow.timesdied, 100, 75);
 		elevi.drawString("Lives:   " + morrow.lives, 100, 100);
+
+		double wow = System.currentTimeMillis();
+		double hmm = (wow - start) / 1000;
+		elevi.drawString("Time: " + hmm, 400, 25);
 	}
 
 	void drawEndState(Graphics elevi) {
@@ -172,6 +176,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startGame() {
+		start = System.currentTimeMillis();
 		font1 = new Font("Arial", 0, 24);
 		morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
 		sixer = new Enemy(Runner.width - 100, 300, 50, 50, this);
