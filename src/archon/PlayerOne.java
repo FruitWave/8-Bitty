@@ -37,41 +37,17 @@ public class PlayerOne extends GameObject implements ActionListener {
 		turngravbackon.setInitialDelay(250);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see archon.GameObject#update()
-	 * 
-	 * the code: if ((y + height) == Runner.height) { gravitEnact = false; } else {
-	 * gravitEnact = true; } needs to be modified to work for ALL scenarios. when
-	 * creating one of those scenarios, MODIFY THIS CODE!!!!
-	 */
 	@Override
 	public void update() {
-		/*
-		 * if (rotateAmount < 360) { rotateAmount++; } else { boolean cancontinue =
-		 * true; for (int i = rotateAmount; i < 360; i -= 360) { if (rotateAmount - 360
-		 * > 0) { cancontinue = true; } else { cancontinue = false; } rotateAmount = i;
-		 * }
-		 * 
-		 * }
-		 */
 		super.update();
 
 		yspeed = yspeedAdder;
 		xspeed = xspeedAdder;
-
 		if (!donotfall) {
 			yspeed += gravispeed;
 		}
-
 		y += yspeed;
 		x += xspeed;
-
-		/*
-		 * if (jumping == true) { y -= 2; yspeed -= 2; x += 2; panelope.jumpPluses -= 2;
-		 * }
-		 */
 		if (y > Runner.height) {
 			isAlive = false;
 		}

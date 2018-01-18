@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -18,7 +19,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	GameManager atari;
 	static PlayerOne morrow;
 	static Enemy sixer;
-	static Enemy sux0r;
+	// static Enemy sux0r;
 	Block initial_friendly;
 	Block initial_enemyblock1;
 	Block initial_onethirdblock;
@@ -34,10 +35,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final static int END_STATE = 3;
 	Block lastblocktobottom;
 	Font font1;
-	double start;
-	/*
-	 * Timer enemspawne; int spawnedde;
-	 */
+	double startTimeInMs;
+	public static int level = 1;
+	// Timer enemspawne;
+	// int spawnedde;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -45,7 +46,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		respawnTimer = new Timer(5000, this);
 		respawnTimer.setInitialDelay(1);
 		font1 = new Font("Arial", 0, 24);
-		/* enemspawne = new Timer(700, this); */
+		// enemspawne = new Timer(700, this);
 	}
 
 	@Override
@@ -57,6 +58,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_V) {
 			currentState = VICTORY_STATE;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_F) {
+			startLevel2();
 		}
 		if (e.getKeyCode() == KeyEvent.VK_R) {
 			respawnTimer.restart();
@@ -120,7 +124,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	void updateGameState() {
 
-		if (atari != null) {
+		if ((atari != null)) {
 			if (morrow.y < 0) {
 				morrow.yspeedAdder = -morrow.yspeedAdder + 1;
 			}
@@ -138,7 +142,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				respawnTimer.start();
 			}
 			if (morrow.x + morrow.width >= Runner.width) {
-				currentState = VICTORY_STATE;
+				level += 1;
+				startNextLevel(level);
 			}
 		}
 	}
@@ -159,9 +164,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		elevi.drawString("Times Died:   " + morrow.timesdied, 100, 75);
 		elevi.drawString("Lives:   " + morrow.lives, 100, 100);
 
-		double wow = System.currentTimeMillis();
-		double hmm = (wow - start) / 1000;
-		elevi.drawString("Time: " + hmm, 400, 25);
+		double now = System.currentTimeMillis();
+		double timeelsapsed = (now - startTimeInMs) / 1000;
+		elevi.drawString("Time: " + timeelsapsed, 400, 25);
 	}
 
 	void drawEndState(Graphics elevi) {
@@ -176,40 +181,112 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startGame() {
-		start = System.currentTimeMillis();
-		font1 = new Font("Arial", 0, 24);
-		morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
-		sixer = new Enemy(Runner.width - 100, 300, 50, 50, this);
-		sux0r = new Enemy(Runner.width * 2 / 3, 350, 50, 50, this);
-		initial_friendly = new Block(100, 400, 50, 50, false, true);
-		initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, false, true);
-		initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
-		initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
-		lastblocktobottom = initial_friendly;
-		/* spawnedde = 0; */
+		if (level == 1) {
+
+			startTimeInMs = System.currentTimeMillis();
+			font1 = new Font("Arial", 0, 24);
+			morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
+			sixer = new Enemy(Runner.width - 100, 300, 50, 50, this);
+			// sux0r = new Enemy(Runner.width * 2 / 3, 350, 50, 50, this);
+			initial_friendly = new Block(100, 400, 50, 50, false, true);
+			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, false, true);
+			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
+			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
+			lastblocktobottom = initial_friendly;
+			/* spawnedde = 0; */
+			atari = new GameManager();
+			atari.addObject(morrow);
+			atari.addObject(sixer);
+			// atari.addObject(sux0r);
+			atari.addObject(initial_friendly);
+			atari.addObject(initial_enemyblock1);
+			atari.addObject(initial_onethirdblock);
+			atari.addObject(initial_twothirdsblock);
+			int blocknum = 0;
+			for (; Runner.height - lastblocktobottom.y + lastblocktobottom.height >= 0;) {
+				Block newftblock = new Block(lastblocktobottom.x, lastblocktobottom.y + lastblocktobottom.height, 50,
+						50, false, true);
+
+				blocknum++;
+				lastblocktobottom = newftblock;
+
+				atari.addObject(newftblock);
+				// System.out.println("New Block #" + blocknum + " made.");
+			}
+			// enemspawne.start();
+
+			masterclock.start();
+			System.out.println("Started!");
+		} else {
+			JOptionPane.showMessageDialog(null, "LEVEL IS NOT ONE");
+		}
+	}
+
+	public void startNextLevel(int whatlevel) {
+		atari.reset();
 		atari = new GameManager();
+		font1 = new Font("Arial", 0, 24);
+		morrow = new PlayerOne(100, 10, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		atari.addObject(sixer);
-		atari.addObject(sux0r);
+		JOptionPane.showMessageDialog(null, "Conglaturations! You have made it to Level " + whatlevel + "!!!");
+		JOptionPane.showMessageDialog(null, "READY PLAYER ONE");
+		switch (whatlevel) {
+		case 2:
+			startLevel2();
+			break;
+		case 3:
+			startLevel3();
+			break;
+		case 4:
+			startLevel4();
+			break;
+		case 5:
+			startLevel5();
+			break;
+		case 6:
+			startLevel6();
+			break;
+		default:
+			JOptionPane.showMessageDialog(null, "ERROR! LEVEL IS NOT GREATER THAN ONE AND LESS THAN SEVEN");
+			break;
+		}
+	}
+
+	private void startLevel6() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void startLevel5() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void startLevel4() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void startLevel3() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void startLevel2() {
+		startTimeInMs = System.currentTimeMillis();
+		font1 = new Font("Arial", 0, 24);
+		initial_friendly = new Block(100, 400, 50, 50, false, true);
 		atari.addObject(initial_friendly);
-		atari.addObject(initial_enemyblock1);
-		atari.addObject(initial_onethirdblock);
-		atari.addObject(initial_twothirdsblock);
-		int blocknum = 0;
+		lastblocktobottom = initial_friendly;
 		for (; Runner.height - lastblocktobottom.y + lastblocktobottom.height >= 0;) {
 			Block newftblock = new Block(lastblocktobottom.x, lastblocktobottom.y + lastblocktobottom.height, 50, 50,
 					false, true);
-
-			blocknum++;
 			lastblocktobottom = newftblock;
-
 			atari.addObject(newftblock);
-			// System.out.println("New Block #" + blocknum + " made.");
 		}
 		/* enemspawne.start(); */
 
-		masterclock.start();
-		System.out.println("Started!");
+		masterclock.restart();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -225,10 +302,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		repaint();
-		/*
-		 * if (e.getSource() == enemspawne) { spawnedde++; Enemy spawneth = new
-		 * Enemy(Runner.width * 2 / 3, -500, 50, 50, this); atari.addObject(spawneth); }
-		 */
+		// if (e.getSource() == enemspawne) {
+		// // spawnedde++;
+		// // Enemy spawneth = new Enemy(Runner.width * 2 / 3, -500, 50, 50, this);
+		// // atari.addObject(spawneth);
+		// System.out.println("hi");
+		// }
+
 		if (e.getSource() == respawnTimer) {
 			if (morrow.lives > 1) {
 				respawnTimer.stop();
