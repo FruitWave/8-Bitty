@@ -39,6 +39,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public static int level = 1;
 	// Timer enemspawne;
 	// int spawnedde;
+	boolean drawandStartNexLevel = false;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -65,7 +66,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_R) {
 			respawnTimer.restart();
 			morrow.timesdied = 0;
-			morrow.lives = 4;
+			morrow.lives = 3;
 		}
 		if (/* (morrow.playeronBlock) && */ e.getKeyCode() == KeyEvent.VK_UP) {
 			playerupbutton = true;
@@ -143,7 +144,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 			if (morrow.x + morrow.width >= Runner.width) {
 				level += 1;
-				startNextLevel(level);
+				drawandStartNexLevel = true;
+
 			}
 		}
 	}
@@ -182,7 +184,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void startGame() {
 		if (level == 1) {
-
 			startTimeInMs = System.currentTimeMillis();
 			font1 = new Font("Arial", 0, 24);
 			morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
@@ -222,14 +223,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	public void startNextLevel(int whatlevel) {
+	public void startNextLevel(int whatlevel, Graphics oalr) {
 		atari.reset();
+		masterclock.restart();
+		fallnow.restart();
 		atari = new GameManager();
 		font1 = new Font("Arial", 0, 24);
 		morrow = new PlayerOne(100, 10, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		JOptionPane.showMessageDialog(null, "Conglaturations! You have made it to Level " + whatlevel + "!!!");
-		JOptionPane.showMessageDialog(null, "READY PLAYER ONE");
+		ingamemessage("Conglaturations! You have made it to Level " + whatlevel + "!!!", oalr);
 		switch (whatlevel) {
 		case 2:
 			startLevel2();
@@ -250,6 +252,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			JOptionPane.showMessageDialog(null, "ERROR! LEVEL IS NOT GREATER THAN ONE AND LESS THAN SEVEN");
 			break;
 		}
+	}
+
+	private void ingamemessage(String stringgeroo, Graphics oalr) {
+		oalr.drawString(stringgeroo, Runner.width / 2, 100);
 	}
 
 	private void startLevel6() {
@@ -289,13 +295,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		masterclock.restart();
 	}
 
-	public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics oalr) {
+		if (drawandStartNexLevel) {
+			drawandStartNexLevel = false;
+			startNextLevel(level, oalr);
+		}
 		if (currentState == LEVEL1_STATE) {
-			drawGameState(g);
+			drawGameState(oalr);
 		} else if (currentState == END_STATE) {
-			drawEndState(g);
+			drawEndState(oalr);
 		} else if (currentState == VICTORY_STATE) {
-			drawVictoryState(g);
+			drawVictoryState(oalr);
 		}
 	}
 
@@ -310,15 +320,21 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		// }
 
 		if (e.getSource() == respawnTimer) {
-			if (morrow.lives > 1) {
+			if (morrow.lives >= 1) {
 				respawnTimer.stop();
 				currentState = LEVEL1_STATE;
 				atari.reset();
 				morrow.timesdied++;
 				morrow.lives--;
-				startGame();
+				if (morrow.lives == 0) {
+					morrow.isAlive = false;
+				}
+				if (level > 1) {
+					drawandStartNexLevel = true;
+				} else {
+					startGame();
+				}
 
-				masterclock.restart();
 			} else {
 
 				currentState = END_STATE;
