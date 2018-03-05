@@ -1,9 +1,11 @@
 package archon;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class GameManager {
+public class GameManager implements ActionListener {
 	ArrayList<GameObject> objects;
 
 	private int score = 0;
@@ -89,9 +91,10 @@ public class GameManager {
 							oork.y = doofon.y - oork.height;
 							oork.donotfall = false;
 						}
-
+						System.out.println(oork.donotfall);
 					} else {
 						GamePanel.morrow.donotfall = false;
+						System.out.println(GamePanel.morrow.donotfall);
 					}
 
 					if (((o1 instanceof Enemy) && (o2 instanceof Block))
@@ -145,5 +148,11 @@ public class GameManager {
 
 	public void reset() {
 		objects.clear();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 }

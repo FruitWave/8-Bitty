@@ -40,6 +40,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	// Timer enemspawne;
 	// int spawnedde;
 	boolean drawandStartNexLevel = false;
+	Backburner backgrundi;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -57,33 +58,39 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_V) {
-			currentState = VICTORY_STATE;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_F) {
-			startLevel2();
-		}
-		if (e.getKeyCode() == KeyEvent.VK_R) {
-			respawnTimer.restart();
-			morrow.timesdied = 0;
-			morrow.lives = 3;
-		}
-		if (/* (morrow.playeronBlock) && */ e.getKeyCode() == KeyEvent.VK_UP) {
-			playerupbutton = true;
-			fallnow.restart();
-		}
+		if (morrow != null) {
+			if (e.getKeyCode() == KeyEvent.VK_V) {
+				currentState = VICTORY_STATE;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_F) {
+				startLevel2();
+			}
+			if (e.getKeyCode() == KeyEvent.VK_R) {
 
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			morrow.xspeedAdder = -2;
-		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			morrow.xspeedAdder = 2;
+				respawnTimer.restart();
+				morrow.timesdied = 0;
+				morrow.lives = 3;
+
+			}
+			if (/* (morrow.playeronBlock) && */ e.getKeyCode() == KeyEvent.VK_UP) {
+				playerupbutton = true;
+				fallnow.restart();
+			}
+
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				morrow.xspeedAdder = -2;
+			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				morrow.xspeedAdder = 2;
+			}
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		morrow.xspeedAdder = 0;
-		playerupbutton = false;
+		if (morrow != null) {
+			morrow.xspeedAdder = 0;
+			playerupbutton = false;
+		}
 	}
 
 	void updateVictoryState() {
@@ -124,28 +131,29 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void updateGameState() {
+		if (morrow != null) {
+			if ((atari != null)) {
+				if (morrow.y < 0) {
+					morrow.yspeedAdder = -morrow.yspeedAdder + 1;
+				}
+				atari.update();
+				atari.checkCollision();
+				atari.manageEnemies();
+				// if (morrow.isAlive == false) {
+				// currentState = END_STATE;
+				// score = atari.getScore();
+				// atari.reset();
+				// tardis = new TARDIS(250, 700, 100, 100);
+				// atari.addObject(tardis);
+				// }
+				if (morrow.isAlive == false) {
+					respawnTimer.start();
+				}
+				if (morrow.x + morrow.width >= Runner.width) {
+					level += 1;
+					drawandStartNexLevel = true;
 
-		if ((atari != null)) {
-			if (morrow.y < 0) {
-				morrow.yspeedAdder = -morrow.yspeedAdder + 1;
-			}
-			atari.update();
-			atari.checkCollision();
-			atari.manageEnemies();
-			// if (morrow.isAlive == false) {
-			// currentState = END_STATE;
-			// score = atari.getScore();
-			// atari.reset();
-			// tardis = new TARDIS(250, 700, 100, 100);
-			// atari.addObject(tardis);
-			// }
-			if (morrow.isAlive == false) {
-				respawnTimer.start();
-			}
-			if (morrow.x + morrow.width >= Runner.width) {
-				level += 1;
-				drawandStartNexLevel = true;
-
+				}
 			}
 		}
 	}
@@ -154,24 +162,28 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void drawGameState(Graphics elevi) {
-		elevi.setColor(Color.BLACK);
-		elevi.fillRect(0, 0, Runner.width, Runner.height);
-		if (atari != null) {
-			atari.draw(elevi);
-		}
-		elevi.setColor(Color.CYAN);
-		elevi.setFont(font1);
-		elevi.drawString("Morrow X-Speed:   " + morrow.xspeed, 100, 25);
-		elevi.drawString("Morrow Y-Speed:   " + morrow.yspeed, 100, 50);
-		elevi.drawString("Times Died:   " + morrow.timesdied, 100, 75);
-		elevi.drawString("Lives:   " + morrow.lives, 100, 100);
+		if (morrow != null) {
 
-		double now = System.currentTimeMillis();
-		double timeelsapsed = (now - startTimeInMs) / 1000;
-		elevi.drawString("Time: " + timeelsapsed, 400, 25);
+			elevi.setColor(Color.BLACK);
+			elevi.fillRect(0, 0, Runner.width, Runner.height);
+			if (atari != null) {
+				atari.draw(elevi);
+			}
+			elevi.setColor(Color.CYAN);
+			elevi.setFont(font1);
+			elevi.drawString("Morrow X-Speed:   " + morrow.xspeed, 100, 25);
+			elevi.drawString("Morrow Y-Speed:   " + morrow.yspeed, 100, 50);
+			elevi.drawString("Times Died:   " + morrow.timesdied, 100, 75);
+			elevi.drawString("Lives:   " + morrow.lives, 100, 100);
+
+			double now = System.currentTimeMillis();
+			double timeelsapsed = (now - startTimeInMs) / 1000;
+			elevi.drawString("Time: " + timeelsapsed, 400, 25);
+		}
 	}
 
 	void drawEndState(Graphics elevi) {
+
 		elevi.setColor(Color.black);
 		elevi.fillRect(0, 0, Runner.width, Runner.height);
 		elevi.setColor(Color.CYAN);
@@ -184,6 +196,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void startGame() {
 		if (level == 1) {
+			backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 			startTimeInMs = System.currentTimeMillis();
 			font1 = new Font("Arial", 0, 24);
 			morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
@@ -196,7 +209,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			lastblocktobottom = initial_friendly;
 			/* spawnedde = 0; */
 			atari = new GameManager();
+			atari.addObject(backgrundi);
 			atari.addObject(morrow);
+
 			atari.addObject(sixer);
 			// atari.addObject(sux0r);
 			atari.addObject(initial_friendly);
@@ -223,16 +238,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	public void startNextLevel(int whatlevel, Graphics oalr) {
+	public void startNextLevel(int whichlevel, Graphics oalr) {
 		atari.reset();
+		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 		masterclock.restart();
 		fallnow.restart();
 		atari = new GameManager();
 		font1 = new Font("Arial", 0, 24);
-		morrow = new PlayerOne(100, 10, 50, 50, true, this, atari);
-		atari.addObject(morrow);
-		ingamemessage("Conglaturations! You have made it to Level " + whatlevel + "!!!", oalr);
-		switch (whatlevel) {
+		atari.addObject(backgrundi);
+		ingamemessage("Conglaturations! You have made it to Level " + whichlevel + "!!!", oalr);
+		switch (whichlevel) {
 		case 2:
 			startLevel2();
 			break;
@@ -279,9 +294,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startLevel2() {
+		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
+		atari.reset();
+		morrow = new PlayerOne(100, 200, 50, 50, true, this, atari);
+		atari.addObject(morrow);
 		font1 = new Font("Arial", 0, 24);
-		initial_friendly = new Block(100, 400, 50, 50, false, true);
+		initial_friendly = new Block(100, 600, 50, 50, false, true);
 		atari.addObject(initial_friendly);
 		lastblocktobottom = initial_friendly;
 		for (; Runner.height - lastblocktobottom.y + lastblocktobottom.height >= 0;) {
@@ -320,40 +339,43 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		// }
 
 		if (e.getSource() == respawnTimer) {
-			if (morrow.lives >= 1) {
-				respawnTimer.stop();
-				currentState = LEVEL1_STATE;
-				atari.reset();
-				morrow.timesdied++;
-				morrow.lives--;
-				if (morrow.lives == 0) {
-					morrow.isAlive = false;
-				}
-				if (level > 1) {
-					drawandStartNexLevel = true;
+			if (morrow != null) {
+				if (morrow.lives >= 1) {
+					respawnTimer.stop();
+					currentState = LEVEL1_STATE;
+					atari.reset();
+					morrow.timesdied++;
+					morrow.lives--;
+					if (morrow.lives == 0) {
+						morrow.isAlive = false;
+					}
+					if (level > 1) {
+						drawandStartNexLevel = true;
+					} else {
+						startGame();
+					}
+
 				} else {
-					startGame();
+
+					currentState = END_STATE;
 				}
-
-			} else {
-
-				currentState = END_STATE;
 			}
 		}
 		if (e.getSource() == fallnow) {
-			fallnowcount++;
-			if (fallnowcount < 8) {
-				morrow.yspeedAdder -= 1;
-			} else if ((fallnowcount > 7) && (fallnowcount < 15)) {
+			if (morrow != null) {
+				fallnowcount++;
+				if (fallnowcount < 8) {
+					morrow.yspeedAdder -= 1;
+				} else if ((fallnowcount > 7) && (fallnowcount < 15)) {
 
-				morrow.yspeedAdder += 1;
+					morrow.yspeedAdder += 1;
 
-			} else {
+				} else {
 
-				fallnow.stop();
-				fallnowcount = 0;
+					fallnow.stop();
+					fallnowcount = 0;
+				}
 			}
-
 		}
 
 		if (currentState == LEVEL1_STATE) {
