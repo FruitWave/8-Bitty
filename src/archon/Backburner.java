@@ -14,8 +14,7 @@ public class Backburner extends GameObject {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-		super.update();
+		collisionArea.setBounds(x, y, width, height);
 	}
 
 	@Override

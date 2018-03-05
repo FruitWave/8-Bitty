@@ -67,7 +67,21 @@ public class GameManager implements ActionListener {
 				GameObject o2 = objects.get(j);
 
 				if (o1.collisionArea.intersects(o2.collisionArea)) {
-
+					if (((o1 instanceof PlayerOne) && (o2 instanceof Backburner))
+							|| ((o2 instanceof PlayerOne) && (o1 instanceof Backburner))) {
+						PlayerOne p = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
+						Backburner ba = o1 instanceof Backburner ? (Backburner) o1 : (Backburner) o2;
+						if (!(o2 instanceof Block)) {
+							p.donotfall = false;
+							//System.out.println("falling?");
+						}
+					}
+					// if ((((o1 instanceof PlayerOne) && (o2 instanceof Backburner))
+					// || ((o2 instanceof PlayerOne) && (o1 instanceof Backburner)))
+					// || (((o1 instanceof PlayerOne) && (o2 instanceof Block))
+					// || ((o2 instanceof PlayerOne) && (o1 instanceof Block)))) {
+					// System.out.println("Thing 1 touching: " + o1 + " Thing 2 touching: " + o2);
+					// }
 					if ((o1 instanceof Block) && (o2 instanceof Block)) {
 						Block doofon = (Block) o1;
 						Block oork = (Block) o2;
@@ -91,10 +105,8 @@ public class GameManager implements ActionListener {
 							oork.y = doofon.y - oork.height;
 							oork.donotfall = false;
 						}
-						System.out.println(oork.donotfall);
 					} else {
 						GamePanel.morrow.donotfall = false;
-						System.out.println(GamePanel.morrow.donotfall);
 					}
 
 					if (((o1 instanceof Enemy) && (o2 instanceof Block))

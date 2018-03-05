@@ -21,11 +21,7 @@ public class Block extends GameObject {
 	public void update() {
 		super.update();
 		if (!locked) {
-
-			if (!locked) {
-				y += gravispeed;
-			}
-
+			y += gravispeed;
 		}
 
 		if ((y + height) > Runner.height) {
@@ -45,6 +41,7 @@ public class Block extends GameObject {
 			// if (y != eternalY) {
 			y = eternalY;
 			// }
+			gravispeed = 0;
 		}
 	}
 

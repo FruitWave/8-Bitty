@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static PlayerOne morrow;
 	static Enemy sixer;
 	// static Enemy sux0r;
-	Block initial_friendly;
+	Block new_friendly;
 	Block initial_enemyblock1;
 	Block initial_onethirdblock;
 	Block initial_twothirdsblock;
@@ -62,8 +62,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			if (e.getKeyCode() == KeyEvent.VK_V) {
 				currentState = VICTORY_STATE;
 			}
-			if (e.getKeyCode() == KeyEvent.VK_F) {
-				startLevel2();
+			if (e.getKeyCode() == KeyEvent.VK_T) {
+				morrow.x = Runner.width - 10;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 
@@ -202,11 +202,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
 			sixer = new Enemy(Runner.width - 100, 300, 50, 50, this);
 			// sux0r = new Enemy(Runner.width * 2 / 3, 350, 50, 50, this);
-			initial_friendly = new Block(100, 400, 50, 50, false, true);
+			new_friendly = new Block(100, 400, 50, 50, false, true);
 			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, false, true);
 			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
 			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
-			lastblocktobottom = initial_friendly;
+			lastblocktobottom = new_friendly;
 			/* spawnedde = 0; */
 			atari = new GameManager();
 			atari.addObject(backgrundi);
@@ -214,7 +214,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 			atari.addObject(sixer);
 			// atari.addObject(sux0r);
-			atari.addObject(initial_friendly);
+			atari.addObject(new_friendly);
 			atari.addObject(initial_enemyblock1);
 			atari.addObject(initial_onethirdblock);
 			atari.addObject(initial_twothirdsblock);
@@ -240,12 +240,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void startNextLevel(int whichlevel, Graphics oalr) {
 		atari.reset();
-		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 		masterclock.restart();
 		fallnow.restart();
 		atari = new GameManager();
 		font1 = new Font("Arial", 0, 24);
-		atari.addObject(backgrundi);
 		ingamemessage("Conglaturations! You have made it to Level " + whichlevel + "!!!", oalr);
 		switch (whichlevel) {
 		case 2:
@@ -271,6 +269,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	private void ingamemessage(String stringgeroo, Graphics oalr) {
 		oalr.drawString(stringgeroo, Runner.width / 2, 100);
+		System.out.println("ingamemessage called");
 	}
 
 	private void startLevel6() {
@@ -297,18 +296,27 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
+		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
+		atari.addObject(backgrundi);
 		morrow = new PlayerOne(100, 200, 50, 50, true, this, atari);
 		atari.addObject(morrow);
 		font1 = new Font("Arial", 0, 24);
-		initial_friendly = new Block(100, 600, 50, 50, false, true);
-		atari.addObject(initial_friendly);
-		lastblocktobottom = initial_friendly;
-		for (; Runner.height - lastblocktobottom.y + lastblocktobottom.height >= 0;) {
-			Block newftblock = new Block(lastblocktobottom.x, lastblocktobottom.y + lastblocktobottom.height, 50, 50,
+		new_friendly = new Block(100, 600, 50, 50, false, true);
+		atari.addObject(new_friendly);
+		Block lastblocktobottom = new_friendly;
+		int bnum = 0;
+		// for (int i = Runner.width / 5; i < 5; i += Runner.width / 5) {
+		for (int i = Runner.width / 5; Runner.height - morrow.y + morrow.height <= 0; i += Runner.width / 5) {
+			Block newblock = new Block(lastblocktobottom.x, lastblocktobottom.y + lastblocktobottom.height, 50, 50,
 					false, true);
-			lastblocktobottom = newftblock;
-			atari.addObject(newftblock);
+			bnum++;
+			lastblocktobottom = newblock;
+			atari.addObject(newblock);
+
+			System.out.println("New Block #" + bnum + " made.");
 		}
+		// }
+
 		/* enemspawne.start(); */
 
 		masterclock.restart();
