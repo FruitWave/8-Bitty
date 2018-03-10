@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final static int END_STATE = 3;
 	Block initiallastblocktobottom;
 	Font font1;
+	Font font2;
 	double startTimeInMs;
 	public static int level = 1;
 	// Timer enemspawne;
@@ -42,6 +43,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	boolean drawandStartNexLevel = false;
 	Backburner backgrundi;
 	static int whichLevelCommonKnowledge;
+	boolean ingameMessage = false;
+	static String levelmessage;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -49,6 +52,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		respawnTimer = new Timer(5000, this);
 		respawnTimer.setInitialDelay(1);
 		font1 = new Font("Arial", 0, 24);
+		font2 = new Font("Arial", 0, 24);
 		// enemspawne = new Timer(700, this);
 	}
 
@@ -157,6 +161,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				}
 			}
 		}
+
 	}
 
 	void updateEndState() {
@@ -176,10 +181,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			elevi.drawString("Morrow Y-Speed:   " + morrow.yspeed, 100, 50);
 			elevi.drawString("Times Died:   " + morrow.timesdied, 100, 75);
 			elevi.drawString("Lives:   " + morrow.lives, 100, 100);
-
 			double now = System.currentTimeMillis();
 			double timeelsapsed = (now - startTimeInMs) / 1000;
 			elevi.drawString("Time: " + timeelsapsed, 400, 25);
+			if (ingameMessage) {
+				ingamemessage(levelmessage, elevi);
+			}
+
 		}
 	}
 
@@ -197,6 +205,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void startGame() {
 		if (level == 1) {
+
 			backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 			startTimeInMs = System.currentTimeMillis();
 			font1 = new Font("Arial", 0, 24);
@@ -234,6 +243,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 			masterclock.start();
 			System.out.println("Started!");
+			ingameMessage = true;
+			levelmessage = "In this level, you'll find out what to avoid, and how the game's basic physics work.";
 		} else {
 			JOptionPane.showMessageDialog(null, "LEVEL IS NOT ONE");
 		}
@@ -254,13 +265,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 					+ afterstartlastblocktobottom.height >= 0; j++) {
 				Block newblock = new Block(afterstartlastblocktobottom.x,
 						afterstartlastblocktobottom.y + afterstartlastblocktobottom.height, 50, 50, false, true);
-				System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
+				// System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
 				bnum++;
 				afterstartlastblocktobottom = newblock;
 				atari.addObject(newblock);
-				System.out.println("New Block #" + bnum + " made.");
+				// System.out.println("New Block #" + bnum + " made.");
 			}
-			System.out.println("New tower has been started.");
+			// System.out.println("New tower has been started.");
 		}
 	}
 
@@ -293,28 +304,30 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void ingamemessage(String stringgeroo, Graphics oalr) {
-		oalr.drawString(stringgeroo, Runner.width / 2, 100);
+		oalr.setColor(Color.RED);
+		oalr.setFont(font2);
+		oalr.drawString(stringgeroo, Runner.width / 4, 300);
 		System.out.println("ingamemessage called");
 	}
 
 	private void startLevel6(Graphics oalr) {
-		font1 = new Font("Arial", 0, 24);
-		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
+		ingameMessage = true;
+		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 	}
 
 	private void startLevel5(Graphics oalr) {
-		font1 = new Font("Arial", 0, 24);
-		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
+		ingameMessage = true;
+		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 	}
 
 	private void startLevel4(Graphics oalr) {
-		font1 = new Font("Arial", 0, 24);
-		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
+		ingameMessage = true;
+		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 	}
 
 	private void startLevel3(Graphics oalr) {
-		font1 = new Font("Arial", 0, 24);
-		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
+		ingameMessage = true;
+		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 	}
 
 	public void startLevel2(Graphics oalr) {
@@ -322,11 +335,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
-		font1 = new Font("Arial", 0, 24);
-		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
 		atari.addObject(backgrundi);
-		morrow = new PlayerOne(100, 200, 50, 50, true, this, atari);
+		ingameMessage = true;
+		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
+		morrow = new PlayerOne(10, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
+		for (int i = 0; i < 10; i++) {
+			Enemy enemus = new Enemy((Runner.width / 10 * i) + (Runner.width / 10 * 4), 200 * i / 3, 50, 50, this);
+			atari.addObject(enemus);
+		}
+
 		makeTowers(0, 400, 10);
 		// }
 
