@@ -33,7 +33,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final static int LEVEL2_STATE = 2;
 	final static int VICTORY_STATE = 4;
 	final static int END_STATE = 3;
-	Block lastblocktobottom;
+	Block initiallastblocktobottom;
+	Block afterstartlastblocktobottom;
 	Font font1;
 	double startTimeInMs;
 	public static int level = 1;
@@ -41,6 +42,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	// int spawnedde;
 	boolean drawandStartNexLevel = false;
 	Backburner backgrundi;
+	static int whichLevelCommonKnowledge;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -206,7 +208,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, false, true);
 			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
 			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
-			lastblocktobottom = new_friendly;
+			initiallastblocktobottom = new_friendly;
 			/* spawnedde = 0; */
 			atari = new GameManager();
 			atari.addObject(backgrundi);
@@ -219,12 +221,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			atari.addObject(initial_onethirdblock);
 			atari.addObject(initial_twothirdsblock);
 			int blocknum = 0;
-			for (; Runner.height - lastblocktobottom.y + lastblocktobottom.height >= 0;) {
-				Block newftblock = new Block(lastblocktobottom.x, lastblocktobottom.y + lastblocktobottom.height, 50,
-						50, false, true);
+			for (; Runner.height - initiallastblocktobottom.y + initiallastblocktobottom.height >= 0;) {
+				Block newftblock = new Block(initiallastblocktobottom.x,
+						initiallastblocktobottom.y + initiallastblocktobottom.height, 50, 50, false, true);
 
 				blocknum++;
-				lastblocktobottom = newftblock;
+				initiallastblocktobottom = newftblock;
 
 				atari.addObject(newftblock);
 				// System.out.println("New Block #" + blocknum + " made.");
@@ -243,23 +245,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		masterclock.restart();
 		fallnow.restart();
 		atari = new GameManager();
-		font1 = new Font("Arial", 0, 24);
-		ingamemessage("Conglaturations! You have made it to Level " + whichlevel + "!!!", oalr);
+		whichLevelCommonKnowledge = whichlevel;
 		switch (whichlevel) {
 		case 2:
-			startLevel2();
+			startLevel2(oalr);
 			break;
 		case 3:
-			startLevel3();
+			startLevel3(oalr);
 			break;
 		case 4:
-			startLevel4();
+			startLevel4(oalr);
 			break;
 		case 5:
-			startLevel5();
+			startLevel5(oalr);
 			break;
 		case 6:
-			startLevel6();
+			startLevel6(oalr);
 			break;
 		default:
 			JOptionPane.showMessageDialog(null, "ERROR! LEVEL IS NOT GREATER THAN ONE AND LESS THAN SEVEN");
@@ -272,48 +273,63 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		System.out.println("ingamemessage called");
 	}
 
-	private void startLevel6() {
-		// TODO Auto-generated method stub
-
+	private void startLevel6(Graphics oalr) {
+		font1 = new Font("Arial", 0, 24);
+		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
 	}
 
-	private void startLevel5() {
-		// TODO Auto-generated method stub
-
+	private void startLevel5(Graphics oalr) {
+		font1 = new Font("Arial", 0, 24);
+		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
 	}
 
-	private void startLevel4() {
-		// TODO Auto-generated method stub
-
+	private void startLevel4(Graphics oalr) {
+		font1 = new Font("Arial", 0, 24);
+		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
 	}
 
-	private void startLevel3() {
-		// TODO Auto-generated method stub
-
+	private void startLevel3(Graphics oalr) {
+		font1 = new Font("Arial", 0, 24);
+		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
 	}
 
-	public void startLevel2() {
+	public void startLevel2(Graphics oalr) {
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
+		font1 = new Font("Arial", 0, 24);
+		ingamemessage("Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!", oalr);
 		atari.addObject(backgrundi);
 		morrow = new PlayerOne(100, 200, 50, 50, true, this, atari);
 		atari.addObject(morrow);
 		font1 = new Font("Arial", 0, 24);
-		new_friendly = new Block(100, 600, 50, 50, false, true);
-		atari.addObject(new_friendly);
-		Block lastblocktobottom = new_friendly;
+		Block newgrounds = new Block(100, 600, 50, 50, false, true);
+		atari.addObject(newgrounds);
+		afterstartlastblocktobottom = newgrounds;
 		int bnum = 0;
 		// for (int i = Runner.width / 5; i < 5; i += Runner.width / 5) {
-		for (int i = Runner.width / 5; Runner.height - morrow.y + morrow.height <= 0; i += Runner.width / 5) {
-			Block newblock = new Block(lastblocktobottom.x, lastblocktobottom.y + lastblocktobottom.height, 50, 50,
-					false, true);
-			bnum++;
-			lastblocktobottom = newblock;
-			atari.addObject(newblock);
+		// Runner.height - afterstartlastblocktobottom.y +
+		// afterstartlastblocktobottom.height <= 0
+		for (int i = Runner.width / 5; Runner.width - i >= 0; i += Runner.width / 5) {
+			if (Runner.height - afterstartlastblocktobottom.y
+					+ afterstartlastblocktobottom.height <= afterstartlastblocktobottom.height) {
+				afterstartlastblocktobottom = new Block(i, 600, 50, 50, false, true);
+			}
+			for (int j = 0; Runner.height - afterstartlastblocktobottom.y
+					+ afterstartlastblocktobottom.height >= 0; j++) {
 
-			System.out.println("New Block #" + bnum + " made.");
+				Block newblock = new Block(afterstartlastblocktobottom.x,
+						afterstartlastblocktobottom.y + afterstartlastblocktobottom.height, 50, 50, false, true);
+				System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
+				bnum++;
+				afterstartlastblocktobottom = newblock;
+				atari.addObject(newblock);
+
+				System.out.println("New Block #" + bnum + " made.");
+			}
+
+			System.out.println("NEW COLUMN STARTED");
 		}
 		// }
 
