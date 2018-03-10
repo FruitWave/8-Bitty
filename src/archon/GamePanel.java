@@ -275,12 +275,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
+	private void ingamemessage(String stringgeroo, Graphics oalr) {
+		oalr.setColor(Color.RED);
+		oalr.setFont(font2);
+		oalr.drawString(stringgeroo, Runner.width / 4, 300);
+		// System.out.println("ingamemessage called");
+	}
+
 	public void startNextLevel(int whichlevel, Graphics oalr) {
 		atari.reset();
 		masterclock.restart();
 		fallnow.restart();
 		atari = new GameManager();
 		whichLevelCommonKnowledge = whichlevel;
+		System.out.println("Level is " + whichLevelCommonKnowledge);
+		morrow = new PlayerOne(10, 600, 50, 50, true, this, atari);
+		atari.addObject(morrow);
 		switch (whichlevel) {
 		case 2:
 			startLevel2(oalr);
@@ -303,13 +313,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	private void ingamemessage(String stringgeroo, Graphics oalr) {
-		oalr.setColor(Color.RED);
-		oalr.setFont(font2);
-		oalr.drawString(stringgeroo, Runner.width / 4, 300);
-		System.out.println("ingamemessage called");
-	}
-
 	private void startLevel6(Graphics oalr) {
 		ingameMessage = true;
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
@@ -326,8 +329,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void startLevel3(Graphics oalr) {
+		fallnow.restart();
+		startTimeInMs = System.currentTimeMillis();
+		atari.reset();
+		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
+		atari.addObject(backgrundi);
 		ingameMessage = true;
-		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
+		levelmessage = "Now the bullets get more creative. Use your knowledge to survive and advance.";
 	}
 
 	public void startLevel2(Graphics oalr) {
@@ -400,6 +408,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				}
 			}
 		}
+
 		if (e.getSource() == fallnow) {
 			if (morrow != null) {
 				fallnowcount++;
