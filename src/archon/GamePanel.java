@@ -45,12 +45,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static int whichLevelCommonKnowledge;
 	boolean ingameMessage = false;
 	static String levelmessage;
+	static boolean endNotTouched = true;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
 		fallnow = new Timer(10, this);
 		respawnTimer = new Timer(5000, this);
-		respawnTimer.setInitialDelay(1);
+		// respawnTimer.setInitialDelay(1);
 		font1 = new Font("Arial", 0, 24);
 		font2 = new Font("Arial", 0, 24);
 		// enemspawne = new Timer(700, this);
@@ -68,7 +69,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				currentState = VICTORY_STATE;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_T) {
-				morrow.x = Runner.width - 10;
+				morrow.x = Runner.width - 60;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 
@@ -154,14 +155,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				if (morrow.isAlive == false) {
 					respawnTimer.start();
 				}
-				if (morrow.x + morrow.width >= Runner.width) {
+
+				if ((morrow.x + morrow.width >= Runner.width) && endNotTouched) {
+					endNotTouched = false;
 					level += 1;
 					drawandStartNexLevel = true;
-
+				} else if (morrow.x + morrow.width < Runner.width) {
+					endNotTouched = true;
 				}
+
 			}
 		}
-
 	}
 
 	void updateEndState() {
@@ -250,13 +254,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	public void makeTowers(int startingX, int startingHeight, int numberOfTowers) {
+	public void makeTowers(int startingX, int endingX, int startingHeight, int numberOfTowers) {
 		Block afterstartlastblocktobottom;
 		Block newgrounds = new Block(startingX, startingHeight, 50, 50, false, true);
 		atari.addObject(newgrounds);
 		afterstartlastblocktobottom = newgrounds;
 		int bnum = 0;
-		for (int i = startingX; Runner.width - i >= 0; i += Runner.width / numberOfTowers) {
+		for (int i = startingX; Runner.width - i >= 0; i += (endingX - startingX) / numberOfTowers) {
 			if (Runner.height - afterstartlastblocktobottom.y
 					+ afterstartlastblocktobottom.height <= afterstartlastblocktobottom.height) {
 				afterstartlastblocktobottom = new Block(i, startingHeight, 50, 50, false, true);
@@ -283,14 +287,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startNextLevel(int whichlevel, Graphics oalr) {
+		// switchedLevel = true;
 		atari.reset();
 		masterclock.restart();
 		fallnow.restart();
 		atari = new GameManager();
 		whichLevelCommonKnowledge = whichlevel;
 		System.out.println("Level is " + whichLevelCommonKnowledge);
-		morrow = new PlayerOne(10, 600, 50, 50, true, this, atari);
-		atari.addObject(morrow);
 		switch (whichlevel) {
 		case 2:
 			startLevel2(oalr);
@@ -336,6 +339,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "Now the bullets get more creative. Use your knowledge to survive and advance.";
+		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
+		atari.addObject(morrow);
+		makeTowers(500, 800, 300, 2);
 	}
 
 	public void startLevel2(Graphics oalr) {
@@ -346,14 +352,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
-		morrow = new PlayerOne(10, 600, 50, 50, true, this, atari);
+		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		for (int i = 0; i < 10; i++) {
-			Enemy enemus = new Enemy((Runner.width / 10 * i) + (Runner.width / 10 * 4), 200 * i / 3, 50, 50, this);
-			atari.addObject(enemus);
-		}
-
-		makeTowers(0, 400, 10);
+		makeTowers(0, 200, 400, 2);
 		// }
 
 		/* enemspawne.start(); */
@@ -397,6 +398,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 						morrow.isAlive = false;
 					}
 					if (level > 1) {
+						level--;
 						drawandStartNexLevel = true;
 					} else {
 						startGame();
