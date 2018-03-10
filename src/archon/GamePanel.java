@@ -241,28 +241,25 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void makeTowers(int startingX, int startingHeight, int numberOfTowers) {
 		Block afterstartlastblocktobottom;
-		Block newgrounds = new Block(100, Runner.height - startingHeight, 50, 50, false, true);
+		Block newgrounds = new Block(startingX, startingHeight, 50, 50, false, true);
 		atari.addObject(newgrounds);
 		afterstartlastblocktobottom = newgrounds;
 		int bnum = 0;
-		for (int i = Runner.width / numberOfTowers; Runner.width - i >= 0; i += Runner.width / numberOfTowers) {
+		for (int i = startingX; Runner.width - i >= 0; i += Runner.width / numberOfTowers) {
 			if (Runner.height - afterstartlastblocktobottom.y
 					+ afterstartlastblocktobottom.height <= afterstartlastblocktobottom.height) {
-				afterstartlastblocktobottom = new Block(i, Runner.height - startingHeight, 50, 50, false, true);
+				afterstartlastblocktobottom = new Block(i, startingHeight, 50, 50, false, true);
 			}
 			for (int j = 0; Runner.height - afterstartlastblocktobottom.y
 					+ afterstartlastblocktobottom.height >= 0; j++) {
-
 				Block newblock = new Block(afterstartlastblocktobottom.x,
 						afterstartlastblocktobottom.y + afterstartlastblocktobottom.height, 50, 50, false, true);
 				System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
 				bnum++;
 				afterstartlastblocktobottom = newblock;
 				atari.addObject(newblock);
-
 				System.out.println("New Block #" + bnum + " made.");
 			}
-
 			System.out.println("New tower has been started.");
 		}
 	}
