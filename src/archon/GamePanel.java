@@ -29,8 +29,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static boolean playerupbutton;
 	static Timer respawnTimer;
 	static int currentState = 1;
-	final static int LEVEL1_STATE = 1;
-	final static int LEVEL2_STATE = 2;
+	final static int GAME_STATE = 1;
 	final static int VICTORY_STATE = 4;
 	final static int END_STATE = 3;
 	Block initiallastblocktobottom;
@@ -40,17 +39,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public static int level = 1;
 	// Timer enemspawne;
 	// int spawnedde;
-	boolean drawandStartNexLevel = false;
+	boolean drawandStartNextLevel = false;
 	Backburner backgrundi;
 	static int whichLevelCommonKnowledge;
 	boolean ingameMessage = false;
 	static String levelmessage;
 	static boolean endNotTouched = true;
 
+	static boolean restartPressed = false;
+
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
 		fallnow = new Timer(10, this);
-		respawnTimer = new Timer(5000, this);
+		respawnTimer = new Timer(5, this);
 		// respawnTimer.setInitialDelay(1);
 		font1 = new Font("Arial", 0, 24);
 		font2 = new Font("Arial", 0, 24);
@@ -72,11 +73,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				morrow.x = Runner.width - 60;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_R) {
-
+				restartPressed = true;
 				respawnTimer.restart();
 				morrow.timesdied = 0;
-				morrow.lives = 3;
-
 			}
 			if (/* (morrow.playeronBlock) && */ e.getKeyCode() == KeyEvent.VK_UP) {
 				playerupbutton = true;
@@ -159,7 +158,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				if ((morrow.x + morrow.width >= Runner.width) && endNotTouched) {
 					endNotTouched = false;
 					level += 1;
-					drawandStartNexLevel = true;
+					drawandStartNextLevel = true;
 				} else if (morrow.x + morrow.width < Runner.width) {
 					endNotTouched = true;
 				}
@@ -173,7 +172,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	void drawGameState(Graphics elevi) {
 		if (morrow != null) {
-
 			elevi.setColor(Color.BLACK);
 			elevi.fillRect(0, 0, Runner.width, Runner.height);
 			if (atari != null) {
@@ -207,13 +205,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	}
 
-	public void startGame() {
+	public void startGame(boolean fullRestarting) {
 		if (level == 1) {
-
 			backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 			startTimeInMs = System.currentTimeMillis();
 			font1 = new Font("Arial", 0, 24);
 			morrow = new PlayerOne(100, 300, 50, 50, true, this, atari);
+			if (fullRestarting) {
+				morrow.lives = 3;
+			}
+
 			sixer = new Enemy(Runner.width - 100, 300, 50, 50, this);
 			// sux0r = new Enemy(Runner.width * 2 / 3, 350, 50, 50, this);
 			new_friendly = new Block(100, 400, 50, 50, false, true);
@@ -225,7 +226,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			atari = new GameManager();
 			atari.addObject(backgrundi);
 			atari.addObject(morrow);
-
 			atari.addObject(sixer);
 			// atari.addObject(sux0r);
 			atari.addObject(new_friendly);
@@ -254,29 +254,48 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	public void makeTowers(int startingX, int endingX, int startingHeight, int numberOfTowers) {
+	public void makeTowers(boolean makeMultiple, int startingX, int endingX, int startingHeight, int numberOfTowers) {
 		Block afterstartlastblocktobottom;
 		Block newgrounds = new Block(startingX, startingHeight, 50, 50, false, true);
 		atari.addObject(newgrounds);
 		afterstartlastblocktobottom = newgrounds;
-		int bnum = 0;
-		for (int i = startingX; Runner.width - i >= 0; i += (endingX - startingX) / numberOfTowers) {
-			if (Runner.height - afterstartlastblocktobottom.y
-					+ afterstartlastblocktobottom.height <= afterstartlastblocktobottom.height) {
-				afterstartlastblocktobottom = new Block(i, startingHeight, 50, 50, false, true);
-			}
-			for (int j = 0; Runner.height - afterstartlastblocktobottom.y
-					+ afterstartlastblocktobottom.height >= 0; j++) {
-				Block newblock = new Block(afterstartlastblocktobottom.x,
-						afterstartlastblocktobottom.y + afterstartlastblocktobottom.height, 50, 50, false, true);
-				// System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
-				bnum++;
-				afterstartlastblocktobottom = newblock;
-				atari.addObject(newblock);
-				// System.out.println("New Block #" + bnum + " made.");
+		// int bnum = 0;
+		int numTowersMade = 1;
+		for (int i = startingX; endingX - i >= 0; i += (endingX - startingX) / numberOfTowers) {
+			if (numTowersMade < numberOfTowers) {
+
+				if (makeMultiple) {
+					if (Runner.height - afterstartlastblocktobottom.y
+							+ afterstartlastblocktobottom.height <= afterstartlastblocktobottom.height) {
+						numTowersMade++;
+						System.out.println("Num of towers to have total: " + numberOfTowers + " Number yet made: "
+								+ numTowersMade);
+						afterstartlastblocktobottom = new Block(i, startingHeight, 50, 50, false, true);
+
+						// } else if (level == 3) {
+						//
+						// }
+						if ((level == 2) || (level == 3)) {
+							Enemy jacobs = new Enemy(afterstartlastblocktobottom.x, startingHeight - 50, 50, 50, this);
+							atari.addObject(jacobs);
+						}
+					}
+				}
+
+				for (int j = 0; Runner.height - afterstartlastblocktobottom.y
+						+ afterstartlastblocktobottom.height >= 0; j++) {
+					Block newblock = new Block(afterstartlastblocktobottom.x,
+							afterstartlastblocktobottom.y + afterstartlastblocktobottom.height, 50, 50, false, true);
+					// System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
+					// bnum++;
+					afterstartlastblocktobottom = newblock;
+					atari.addObject(newblock);
+					// System.out.println("New Block #" + bnum + " made.");
+				}
 			}
 			// System.out.println("New tower has been started.");
 		}
+
 	}
 
 	private void ingamemessage(String stringgeroo, Graphics oalr) {
@@ -331,7 +350,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 	}
 
-	private void startLevel3(Graphics oalr) {
+	public void startLevel3(Graphics oalr) {
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
@@ -341,7 +360,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "Now the bullets get more creative. Use your knowledge to survive and advance.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		makeTowers(500, 800, 300, 2);
+		makeTowers(true, Runner.width / 3, (Runner.width / 3) + 150, 300, 2);
+		makeTowers(true, 2 * Runner.width / 3, (2 * (Runner.width / 3)) + 150, 300, 2);
 	}
 
 	public void startLevel2(Graphics oalr) {
@@ -354,20 +374,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		makeTowers(0, 200, 400, 2);
-		// }
-
-		/* enemspawne.start(); */
+		makeTowers(true, Runner.width / 2, 2 * (Runner.width / 3), Runner.height / 8, 3);
 
 		masterclock.restart();
 	}
 
 	public void paintComponent(Graphics oalr) {
-		if (drawandStartNexLevel) {
-			drawandStartNexLevel = false;
+		if (drawandStartNextLevel) {
+			drawandStartNextLevel = false;
 			startNextLevel(level, oalr);
 		}
-		if (currentState == LEVEL1_STATE) {
+		if (currentState == GAME_STATE) {
 			drawGameState(oalr);
 		} else if (currentState == END_STATE) {
 			drawEndState(oalr);
@@ -388,26 +405,48 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 		if (e.getSource() == respawnTimer) {
 			if (morrow != null) {
-				if (morrow.lives >= 1) {
-					respawnTimer.stop();
-					currentState = LEVEL1_STATE;
+				System.out.println("Morrow is not null.");
+				respawnTimer.stop();
+
+				fallnow.stop();
+				fallnowcount = 0;
+				morrow.timesdied++;
+				morrow.lives--;
+				sixer = null;
+				new_friendly = null;
+				initial_enemyblock1 = null;
+				initial_onethirdblock = null;
+				initial_twothirdsblock = null;
+				playerupbutton = false;
+				initiallastblocktobottom = null;
+				level = 1;
+				// Timer enemspawne;
+				// int spawnedde;
+				drawandStartNextLevel = false;
+				backgrundi = null;
+				ingameMessage = false;
+				levelmessage = null;
+				endNotTouched = true;
+				if (morrow.lives <= 0) {
+					System.out.println("Morrow has " + morrow.lives + " lives.");
 					atari.reset();
-					morrow.timesdied++;
-					morrow.lives--;
-					if (morrow.lives == 0) {
-						morrow.isAlive = false;
-					}
-					if (level > 1) {
-						level--;
-						drawandStartNexLevel = true;
-					} else {
-						startGame();
-					}
-
-				} else {
-
+					morrow.lives = 3;
+					morrow.timesdied = 0;
 					currentState = END_STATE;
+				} else if ((currentState == END_STATE) && (restartPressed)) {
+					System.out.println("Full restart from end state");
+					currentState = GAME_STATE;
+					morrow.timesdied = 0;
+					morrow.lives = 3;
+					restartPressed = false;
+					startGame(true);
+				} else if (morrow.lives >= 1) {
+					System.out.println("Lives are at: " + morrow.lives);
+					startGame(false);
 				}
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Morrow is null. Please rewrite the code in this block to prevent this from happening.");
 			}
 		}
 
@@ -428,7 +467,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 
-		if (currentState == LEVEL1_STATE) {
+		if (currentState == GAME_STATE) {
 			updateGameState();
 		} else if (currentState == END_STATE) {
 			updateEndState();

@@ -30,7 +30,7 @@ public class Runner {
 		sym.setSize(width, height);
 		sym.setVisible(true);
 		sym.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		panelope.startGame();
+		panelope.startGame(true);
 		// System.out.println("runner");
 	}
 }

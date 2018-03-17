@@ -83,12 +83,18 @@ public class Projectile extends GameObject {
 	}
 
 	private void moveYSpeedAdder(String type) {
-		if (type.equals(standard) || type.equals(allDirection) || type.equals(duplicating)) {
+		if (type.equals(standard) || type.equals(duplicating)) {
 
 			if (y < GamePanel.morrow.y) {
 				yspeedAdder = 1;
 			} else {
 				yspeedAdder = -3;
+			}
+		} else if (type.equals(allDirection)) {
+			if (y == GamePanel.morrow.y) {
+				yspeedAdder = 0;
+			} else {
+				yspeedAdder = y < GamePanel.morrow.y ? 4 : -4;
 			}
 		} else if (type.equals(accelerative)) {
 			if (Math.abs(yspeedAdder) < 15) {
@@ -111,11 +117,17 @@ public class Projectile extends GameObject {
 	}
 
 	private void moveXSpeedAdder(String type) {
-		if (type.equals(standard) || type.equals(allDirection) || type.equals(duplicating)) {
+		if (type.equals(standard) || type.equals(duplicating)) {
 			if (x > GamePanel.morrow.x) {
 				xspeedAdder = -7;
 			} else {
 				xspeedAdder--;
+			}
+		} else if (type.equals(allDirection)) {
+			if (x == GamePanel.morrow.x) {
+				xspeedAdder = 0;
+			} else {
+				xspeedAdder = x < GamePanel.morrow.x ? 4 : -4;
 			}
 		} else if (type.equals(accelerative)) {
 			if (Math.abs(xspeedAdder) < 30) {
