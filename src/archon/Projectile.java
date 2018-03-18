@@ -15,6 +15,7 @@ public class Projectile extends GameObject {
 	private final static String accelerative = "accelerative";
 	private final static String duplicating = "duplicating";
 	private final static String randomMotion = "randomMotion";
+	boolean hasInvisiblock;
 
 	public Projectile(int x, int y, int width, int height) {
 		super(x, y, width, height);
@@ -23,6 +24,7 @@ public class Projectile extends GameObject {
 		xspeedAdder = 0;
 		yspeedAdder = 0;
 		everyother = 0;
+
 	}
 
 	@Override
@@ -30,7 +32,11 @@ public class Projectile extends GameObject {
 		// TODO Auto-generated method stub
 		super.update();
 		settypeandtellmove(GamePanel.level);
-
+		if (type.equals(allDirection)) {
+			hasInvisiblock = true;
+		} else {
+			hasInvisiblock = false;
+		}
 		yspeed = yspeedAdder;
 		xspeed = xspeedAdder;
 		if ((type != randomMotion) && GamePanel.level != 1) {
@@ -84,18 +90,14 @@ public class Projectile extends GameObject {
 
 	private void moveYSpeedAdder(String type) {
 		if (type.equals(standard) || type.equals(duplicating)) {
-
 			if (y < GamePanel.morrow.y) {
 				yspeedAdder = 1;
 			} else {
 				yspeedAdder = -3;
 			}
 		} else if (type.equals(allDirection)) {
-			if (y == GamePanel.morrow.y) {
-				yspeedAdder = 0;
-			} else {
-				yspeedAdder = y < GamePanel.morrow.y ? 4 : -4;
-			}
+			yspeedAdder = y <= GamePanel.morrow.y ? 1 : -2;
+			System.out.println("YSPEEDADDER is" + yspeedAdder);
 		} else if (type.equals(accelerative)) {
 			if (Math.abs(yspeedAdder) < 15) {
 				if (y < GamePanel.morrow.y) {
@@ -127,7 +129,7 @@ public class Projectile extends GameObject {
 			if (x == GamePanel.morrow.x) {
 				xspeedAdder = 0;
 			} else {
-				xspeedAdder = x < GamePanel.morrow.x ? 4 : -4;
+				xspeedAdder = x < GamePanel.morrow.x ? 1 : -1;
 			}
 		} else if (type.equals(accelerative)) {
 			if (Math.abs(xspeedAdder) < 30) {

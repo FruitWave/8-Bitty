@@ -357,7 +357,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 		atari.addObject(backgrundi);
 		ingameMessage = true;
-		levelmessage = "Now the bullets get more creative. Use your knowledge to survive and advance.";
+		levelmessage = "Now the bullets get more creative...and scary. Use your knowledge to survive and advance.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
 		makeTowers(true, Runner.width / 3, (Runner.width / 3) + 150, 300, 2);

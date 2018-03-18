@@ -73,7 +73,7 @@ public class GameManager implements ActionListener {
 						Backburner ba = o1 instanceof Backburner ? (Backburner) o1 : (Backburner) o2;
 						if (!(o2 instanceof Block)) {
 							p.donotfall = false;
-							//System.out.println("falling?");
+							// System.out.println("falling?");
 						}
 					}
 					// if ((((o1 instanceof PlayerOne) && (o2 instanceof Backburner))
@@ -135,7 +135,10 @@ public class GameManager implements ActionListener {
 					if (((o1 instanceof Projectile) && (o2 instanceof Block))
 							|| ((o2 instanceof Projectile) && (o1 instanceof Block))) {
 						Projectile onki = o1 instanceof Projectile ? (Projectile) o1 : (Projectile) o2;
-						onki.isAlive = false;
+						if (!onki.hasInvisiblock) {
+							onki.isAlive = false;
+						}
+						
 					}
 					if (((o1 instanceof PlayerOne) && (o2 instanceof Projectile))
 							|| ((o2 instanceof PlayerOne) && (o1 instanceof Projectile))) {
