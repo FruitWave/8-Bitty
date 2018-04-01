@@ -93,7 +93,9 @@ public class GameManager implements ActionListener {
 
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
 						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
-
+						if (doofon.deadlybedrock) {
+							oork.isAlive = false;
+						}
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
 						oork.yspeedAdder = 0;
 						oork.playeronBlock = true; /* unnecessary */

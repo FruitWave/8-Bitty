@@ -7,14 +7,16 @@ public class Block extends GameObject {
 	int eternalY;
 	int eternalX;
 	boolean locked;
+	boolean deadlybedrock;
 
-	public Block(int x, int y, int width, int height, boolean lockedInPlace) {
+	public Block(int x, int y, int width, int height, boolean lockedInPlace, boolean deadly) {
 		super(x, y, width, height);
 		// if (lockedInPlace) {
 		eternalX = x;
 		eternalY = y;
 		// }
 		locked = lockedInPlace;
+		deadlybedrock = deadly;
 	}
 
 	@Override
