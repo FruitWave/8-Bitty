@@ -39,7 +39,7 @@ public class Projectile extends GameObject {
 		}
 		yspeed = yspeedAdder;
 		xspeed = xspeedAdder;
-		if ((type != randomMotion) && GamePanel.level != 1) {
+		if ((type != randomMotion) && (type != allDirection) && (GamePanel.level != 1)) {
 			yspeed += gravispeed;
 		}
 		x += xspeed;
@@ -96,8 +96,8 @@ public class Projectile extends GameObject {
 				yspeedAdder = -3;
 			}
 		} else if (type.equals(allDirection)) {
-			yspeedAdder = y <= GamePanel.morrow.y ? 1 : -2;
-			System.out.println("YSPEEDADDER is" + yspeedAdder);
+			yspeedAdder = y <= GamePanel.morrow.y ? 1 : -1;
+			// System.out.println("YSPEEDADDER is" + yspeedAdder);
 		} else if (type.equals(accelerative)) {
 			if (Math.abs(yspeedAdder) < 15) {
 				if (y < GamePanel.morrow.y) {
