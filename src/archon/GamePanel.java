@@ -251,13 +251,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		Block newgrounds = new Block(startingX, startingHeight, width, height, true);
 		atari.addObject(newgrounds);
 		keystone = newgrounds;
-		makeTowerBlockNum = 0;
 		int numTowersMade = 0;
-		for (int i = startingX /* start at the starting x */; endingX
+		for (double i = startingX /* start at the starting x */; endingX
 				- i >= 0 /* as long as there is space, continue */; i += (endingX - startingX)
-						/ numberOfTowers /* increment by space/towers */) {
+						/ (numberOfTowers - 1) /* increment by space/towers */) {
+			System.out.println("Increment by " + ((endingX - startingX) / numberOfTowers));
 			if (numTowersMade < numberOfTowers /* if the number of towers quota is not filled, continue */) {
-				keystone.x = i;
+				keystone.x = (int) i;
 				outsourceOneTowerBuild(keystone, true);
 				numTowersMade++;
 				System.out.println(
@@ -277,22 +277,18 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void outsourceOneTowerBuild(Block initialBlock, boolean makingMultiple) {
 		// must have existing block (added to atari) for reference!!!
-		for (int j = 0; Runner.height - initialBlock.y
-				+ initialBlock.height >= 0 /* is there vertical space left */; j++) {
+		for (; Runner.height - initialBlock.y + initialBlock.height >= 0 /* is there vertical space left */;) {
 
 			Block newblock = new Block(initialBlock.x, initialBlock.y + initialBlock.height, initialBlock.width,
 					initialBlock.height, true);
 			// new block just below reference point
-			// System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
-			makeTowerBlockNum++;
 			initialBlock = newblock;
 			// set new block to the reference point
 			atari.addObject(newblock);
 			// add newly set new reference point
-			/*
-			 * if (!makingMultiple) { System.out.println("New Block #" + makeTowerBlockNum +
-			 * " made."); }
-			 */
+			if (makingMultiple) {
+				System.out.println("X is " + initialBlock.x);
+			}
 
 		}
 	}
@@ -373,14 +369,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		makeMultipleTowers(Runner.width / 3, 2 * (Runner.width / 3), Runner.height / 8, 50, 50, 3);
+		makeMultipleTowers(Runner.width / 3, 2 * Runner.width / 3, Runner.height / 8, 50, 50, 3);
 		System.out.println("1/3 width = " + (Runner.width / 3));
-		System.out.println("2/3 width = " + (2 * (Runner.width / 3)));
+		System.out.println("2/3 width = " + (2 * Runner.width / 3));
 		System.out.println("3/3 width = " + Runner.width);
-		Block hellohere = new Block(2*Runner.width / 6, 6 * Runner.height / 8, 50, 50, true);
+		Block hellohere = new Block(2 * Runner.width / 6, 6 * Runner.height / 8, 50, 50, true);
 		atari.addObject(hellohere);
 		outsourceOneTowerBuild(hellohere, false);
-		Block hellothere = new Block(5 * Runner.width / 6, 6 * Runner.height / 8, 50, 50, true);
+		Block hellothere = new Block(4 * Runner.width / 6, 6 * Runner.height / 8, 50, 50, true);
 		outsourceOneTowerBuild(hellothere, false);
 		masterclock.restart();
 	}

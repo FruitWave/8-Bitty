@@ -36,7 +36,7 @@ public class Enemy extends GameObject {
 	public void draw(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillRect(x, y, width, height);
-		g.drawLine(x, y, archonian.morrow.x, archonian.morrow.y);
+		//g.drawLine(x, y, archonian.morrow.x, archonian.morrow.y);
 	}
 
 }
