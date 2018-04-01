@@ -138,7 +138,7 @@ public class GameManager implements ActionListener {
 						if (!onki.hasInvisiblock) {
 							onki.isAlive = false;
 						}
-						
+
 					}
 					if (((o1 instanceof PlayerOne) && (o2 instanceof Projectile))
 							|| ((o2 instanceof PlayerOne) && (o1 instanceof Projectile))) {

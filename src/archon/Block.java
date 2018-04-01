@@ -8,7 +8,7 @@ public class Block extends GameObject {
 	int eternalX;
 	boolean locked;
 
-	public Block(int x, int y, int width, int height, boolean gravityAffected, boolean lockedInPlace) {
+	public Block(int x, int y, int width, int height, boolean lockedInPlace) {
 		super(x, y, width, height);
 		// if (lockedInPlace) {
 		eternalX = x;

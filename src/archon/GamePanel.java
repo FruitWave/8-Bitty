@@ -216,10 +216,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 
 			sixer = new Enemy(Runner.width - 100, 300, 50, 50, this);
-			new_friendly = new Block(100, 400, 50, 50, false, true);
-			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, false, true);
-			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
-			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
+			new_friendly = new Block(100, 400, 50, 50, true);
+			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, true);
+			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false);
+			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false);
 			initiallastblocktobottom = new_friendly;
 			/* spawnedde = 0; */
 			atari = new GameManager();
@@ -231,17 +231,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			atari.addObject(initial_enemyblock1);
 			atari.addObject(initial_onethirdblock);
 			atari.addObject(initial_twothirdsblock);
-			int blocknum = 0;
-
-			for (; Runner.height - initiallastblocktobottom.y + initiallastblocktobottom.height >= 0;) {
-				Block newftblock = new Block(initiallastblocktobottom.x,
-						initiallastblocktobottom.y + initiallastblocktobottom.height, 50, 50, false, true);
-
-				blocknum++;
-				initiallastblocktobottom = newftblock;
-
-				atari.addObject(newftblock); // System.out.println("New Block #" + blocknum + " made.");
-			}
+			outsourceOneTowerBuild(new_friendly, false);
 
 			// makeTowers(false, new_friendly.x, new_friendly.x, new_friendly.y, 1);
 			// enemspawne.start();
@@ -255,55 +245,43 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	public void makeTowers(boolean makeMultiple, int startingX, int endingX, int startingHeight, int numberOfTowers) {
-		/*
-		 * FOR SINGLE TOWERS, SET makeMultiple TO false, SET startingX TO [desired x
-		 * value], SET endingX TO [anything greater than or equal to startingX], SET
-		 * startingHeight TO [desired top y value], AND SET numberOfTowers TO 1
-		 */
-		if (!makeMultiple) {
-			endingX = 0;
-			numberOfTowers = 0;
-		}
+	public void makeMultipleTowers(int startingX, int endingX, int startingHeight, int width, int height,
+			int numberOfTowers) {
 		Block keystone;
-		Block newgrounds = new Block(startingX, startingHeight, 25, 25, false, true);
+		Block newgrounds = new Block(startingX, startingHeight, width, height, true);
 		atari.addObject(newgrounds);
 		keystone = newgrounds;
 		makeTowerBlockNum = 0;
 		int numTowersMade = 0;
-		if (makeMultiple) {
-			for (int i = startingX /* start at the starting x */; endingX
-					- i >= 0 /* as long as there is space, continue */; i += (endingX - startingX)
-							/ numberOfTowers /* increment by space/towers */) {
-				if (numTowersMade < numberOfTowers /* if the number of towers quota is not filled, continue */) {
-					keystone.x = i;
-					outsourceOneTowerBuild(keystone, true);
-					numTowersMade++;
-					System.out.println(
-							"Num of towers to have total: " + numberOfTowers + " Number yet made: " + numTowersMade);
+		for (int i = startingX /* start at the starting x */; endingX
+				- i >= 0 /* as long as there is space, continue */; i += (endingX - startingX)
+						/ numberOfTowers /* increment by space/towers */) {
+			if (numTowersMade < numberOfTowers /* if the number of towers quota is not filled, continue */) {
+				keystone.x = i;
+				outsourceOneTowerBuild(keystone, true);
+				numTowersMade++;
+				System.out.println(
+						"Num of towers to have total: " + numberOfTowers + " Number yet made: " + numTowersMade);
 
-					if ((level == 2) || (level == 3)) {
-						Enemy jacobs = new Enemy(keystone.x, startingHeight - 50, 50, 50, this);
-						atari.addObject(jacobs);
-						// there will be one less enemies than the num of towers (one tower has already
-						// been completed)
-					}
+				if ((level == 2) || (level == 3)) {
+					Enemy jacobs = new Enemy(keystone.x, startingHeight - 50, 50, 50, this);
+					atari.addObject(jacobs);
+					// there will be one less enemies than the num of towers (one tower has already
+					// been completed)
 				}
 
 			}
-		} else {
-			outsourceOneTowerBuild(keystone, false);
 		}
-		// System.out.println("New tower has been started.");
 
 	}
 
-	private void outsourceOneTowerBuild(Block initialBlock, boolean makingMultiple) {
+	public void outsourceOneTowerBuild(Block initialBlock, boolean makingMultiple) {
+		// must have existing block (added to atari) for reference!!!
 		for (int j = 0; Runner.height - initialBlock.y
 				+ initialBlock.height >= 0 /* is there vertical space left */; j++) {
 
 			Block newblock = new Block(initialBlock.x, initialBlock.y + initialBlock.height, initialBlock.width,
-					initialBlock.height, false, true);
+					initialBlock.height, true);
 			// new block just below reference point
 			// System.out.println(newblock.x + " (x)," + newblock.y + " (y)");
 			makeTowerBlockNum++;
@@ -311,9 +289,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			// set new block to the reference point
 			atari.addObject(newblock);
 			// add newly set new reference point
-			if (!makingMultiple) {
-				System.out.println("New Block #" + makeTowerBlockNum + " made.");
-			}
+			/*
+			 * if (!makingMultiple) { System.out.println("New Block #" + makeTowerBlockNum +
+			 * " made."); }
+			 */
 
 		}
 	}
@@ -380,8 +359,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "Now the bullets get more creative...and scary. Use your knowledge to survive and advance.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		makeTowers(true, Runner.width / 3, (Runner.width / 3) + 150, 300, 2);
-		makeTowers(true, 2 * Runner.width / 3, (2 * (Runner.width / 3)) + 150, 300, 2);
+		makeMultipleTowers(Runner.width / 3, (Runner.width / 3) + 150, 300, 50, 50, 2);
+		makeMultipleTowers(2 * Runner.width / 3, (2 * (Runner.width / 3)) + 150, 300, 50, 50, 2);
 	}
 
 	public void startLevel2(Graphics oalr) {
@@ -394,9 +373,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		makeTowers(true, Runner.width / 3, 2 * (Runner.width / 3), Runner.height / 8, 3);
-		makeTowers(false, Runner.width / 6, 0, 6 * Runner.height / 8, 0);
-		makeTowers(false, 5 * Runner.width / 6, 0, 6 * Runner.height / 8, 0);
+		makeMultipleTowers(Runner.width / 3, 2 * (Runner.width / 3), Runner.height / 8, 50, 50, 3);
+		System.out.println("1/3 width = " + (Runner.width / 3));
+		System.out.println("2/3 width = " + (2 * (Runner.width / 3)));
+		System.out.println("3/3 width = " + Runner.width);
+		Block hellohere = new Block(2*Runner.width / 6, 6 * Runner.height / 8, 50, 50, true);
+		atari.addObject(hellohere);
+		outsourceOneTowerBuild(hellohere, false);
+		Block hellothere = new Block(5 * Runner.width / 6, 6 * Runner.height / 8, 50, 50, true);
+		outsourceOneTowerBuild(hellothere, false);
 		masterclock.restart();
 	}
 
