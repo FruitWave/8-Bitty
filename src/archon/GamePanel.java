@@ -32,7 +32,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final static int GAME_STATE = 1;
 	final static int VICTORY_STATE = 4;
 	final static int END_STATE = 3;
-	Block initiallastblocktobottom;
 	Font font1;
 	Font font2;
 	double startTimeInMs;
@@ -220,14 +219,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, true, false);
 			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
 			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
-			initiallastblocktobottom = new_friendly;
 			/* spawnedde = 0; */
 			atari = new GameManager();
 			atari.addObject(backgrundi);
 			atari.addObject(morrow);
 			atari.addObject(sixer);
 
-			atari.addObject(new_friendly);
+			// atari.addObject(new_friendly);
 			atari.addObject(initial_enemyblock1);
 			atari.addObject(initial_onethirdblock);
 			atari.addObject(initial_twothirdsblock);
@@ -247,10 +245,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void makeMultipleTowers(int startingX, int endingX, int startingHeight, int width, int height,
 			int numberOfTowers, boolean deadly, boolean toBot) {
-		Block keystone;
-		Block newgrounds = new Block(startingX, startingHeight, width, height, true, deadly);
-		atari.addObject(newgrounds);
-		keystone = newgrounds;
+		Block keystone = new Block(startingX, startingHeight, width, height, true, deadly);
+		// atari.addObject(newgrounds);
 		int numTowersMade = 0;
 		for (double i = startingX /* start at the starting x */; endingX
 				- i >= 0 /* as long as there is space, continue */; i += (endingX - startingX)
@@ -276,35 +272,41 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	}
 
-	public void outsourceOneTowerBuild(Block initialBlock, boolean makingMultiple, boolean deadly,
+	public void outsourceOneTowerBuild(Block referenceBlock, boolean makingMultiple, boolean deadly,
 			boolean toBot /* (to bottom) */) {
 		// must have existing block (added to atari) for reference!!!
+		// Block permanitial = initialBlock;
+		atari.addObject(referenceBlock);
 		if (toBot) {
-			for (; Runner.height - initialBlock.y + initialBlock.height >= 0 /* is there vertical space left */;) {
-				Block newblock = new Block(initialBlock.x, initialBlock.y + initialBlock.height, initialBlock.width,
-						initialBlock.height, true, deadly);
+			for (int p = 0; Runner.height - referenceBlock.y
+					+ referenceBlock.height >= 0 /* is there vertical space left */; p++) {
+				Block newblock = new Block(referenceBlock.x, referenceBlock.y + referenceBlock.height,
+						referenceBlock.width, referenceBlock.height, true, deadly);
+				newblock.y = referenceBlock.y + referenceBlock.height;
+				System.out.println("hi");
 				// new block just below reference point
-				initialBlock = newblock;
+				referenceBlock = newblock;
 				// set new block to the reference point
 				atari.addObject(newblock);
+				System.out.println("added");
 				// add newly set new reference point
 				if (makingMultiple) {
-					System.out.println("X is " + initialBlock.x);
+					System.out.println("X is " + referenceBlock.x);
 				}
 
 			}
 		} else {
-			for (; initialBlock.y > 0 /* is there vertical space left */;) {
-
-				Block newblock = new Block(initialBlock.x, initialBlock.y - initialBlock.height, initialBlock.width,
-						initialBlock.height, true, deadly);
+			for (int pr = 0; referenceBlock.y > 0 /* is there vertical space left */; pr++) {
+				Block newblock = new Block(referenceBlock.x, referenceBlock.y - referenceBlock.height,
+						referenceBlock.width, referenceBlock.height, true, deadly);
+				newblock.y = referenceBlock.y - referenceBlock.height;
 				// new block just below reference point
-				initialBlock = newblock;
+				referenceBlock = newblock;
 				// set new block to the reference point
 				atari.addObject(newblock);
 				// add newly set new reference point
 				if (makingMultiple) {
-					System.out.println("X is " + initialBlock.x);
+					System.out.println("X is " + referenceBlock.x);
 				}
 
 			}
@@ -449,7 +451,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				initial_onethirdblock = null;
 				initial_twothirdsblock = null;
 				playerupbutton = false;
-				initiallastblocktobottom = null;
 				level = 1;
 				// Timer enemspawne;
 				// int spawnedde;
