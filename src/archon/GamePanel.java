@@ -353,6 +353,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	private void startLevel6(Graphics oalr) {
 		ingameMessage = true;
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
+		fallnow.restart();
+		startTimeInMs = System.currentTimeMillis();
+		atari.reset();
+		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
+		atari.addObject(backgrundi);
+		ingameMessage = true;
 	}
 
 	private void startLevel5(Graphics oalr) {
