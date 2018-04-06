@@ -324,12 +324,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void startNextLevel(int whichlevel, Graphics oalr) {
 		// switchedLevel = true;
-		atari.reset();
 		masterclock.restart();
-		fallnow.restart();
 		atari = new GameManager();
 		whichLevelCommonKnowledge = whichlevel;
-		System.out.println("Level is " + whichLevelCommonKnowledge);
+		// System.out.println("Level is " + whichLevelCommonKnowledge);
 		switch (whichlevel) {
 		case 2:
 			startLevel2(oalr);
@@ -358,8 +356,24 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void startLevel5(Graphics oalr) {
+		fallnow.restart();
+		startTimeInMs = System.currentTimeMillis();
+		atari.reset();
+		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
+		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
+		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
+		atari.addObject(morrow);
+		for (int i = 0; i < 60; i++) {
+			int wow = new Random().nextInt(Runner.width);
+			int wowzer = new Random().nextInt(Runner.height);
+			int waaaaaa = new Random().nextInt(2);
+			boolean ah = waaaaaa == 0 ? true : false;
+			Block woah = new Block(wow, wowzer, 5, 5, true, ah);
+			atari.addObject(woah);
+		}
+
 	}
 
 	private void startLevel4(Graphics oalr) {
@@ -401,14 +415,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
 		makeMultipleTowers(Runner.width / 3, 2 * Runner.width / 3, Runner.height / 8, 50, 50, 3, false, true);
-		System.out.println("1/3 width = " + (Runner.width / 3));
-		System.out.println("2/3 width = " + (2 * Runner.width / 3));
-		System.out.println("3/3 width = " + Runner.width);
-		Block hellohere = new Block(2 * Runner.width / 6, 6 * Runner.height / 8, 50, 50, true, false);
-		atari.addObject(hellohere);
-		outsourceOneTowerBuild(hellohere, false, false, true);
-		Block hellothere = new Block(4 * Runner.width / 6, 6 * Runner.height / 8, 50, 50, true, false);
-		outsourceOneTowerBuild(hellothere, false, false, true);
 		masterclock.restart();
 	}
 

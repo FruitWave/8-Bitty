@@ -50,7 +50,12 @@ public class Block extends GameObject {
 
 	@Override
 	public void draw(Graphics g) {
-		g.setColor(Color.ORANGE);
+		if (!deadlybedrock) {
+			g.setColor(Color.ORANGE);
+		} else {
+			g.setColor(Color.blue);
+		}
+
 		g.fillRect(x, y, width, height);
 		// g.setColor(Color.BLUE);
 		// g.drawLine(0, 993, 2000, 993);
