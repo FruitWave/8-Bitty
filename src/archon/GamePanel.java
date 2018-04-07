@@ -17,9 +17,9 @@ import javax.swing.Timer;
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer masterclock;
 	GameManager atari;
+	static boolean inJumpingProcess;
 	static PlayerOne morrow;
 	static Enemy sixer;
-	// static Enemy sux0r;
 	Block new_friendly;
 	Block initial_enemyblock1;
 	Block initial_onethirdblock;
@@ -85,9 +85,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				respawnTimer.restart();
 				morrow.timesdied = 0;
 			}
-			if (/* (morrow.playeronBlock) && */ e.getKeyCode() == KeyEvent.VK_UP) {
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				playerupbutton = true;
+				fallnowcount = 0;
 				fallnow.restart();
+
 			}
 
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -146,8 +148,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameState() {
 		if (morrow != null) {
 			if ((atari != null)) {
+				if (morrow.yspeed >= 2) {
+					System.out.println("YSPEED IS " + morrow.yspeed);
+					morrow.yspeed = 0;
+				}
 				if (morrow.y < 0) {
-					morrow.yspeedAdder = -morrow.yspeedAdder + 1;
+					// morrow.yspeedAdder = -morrow.yspeedAdder + 1;
+					morrow.isAlive = false;
 				}
 				atari.update();
 				atari.checkCollision();
@@ -252,7 +259,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void makeMultipleTowers(int startingX, int endingX, int startingHeight, int width, int height,
 			int numberOfTowers, boolean deadly, boolean toBot) {
-		Block keystone = new Block(startingX, startingHeight, width, height, true, deadly);
+		Block keystone = new Block(startingX, startingHeight - height, width, height, true, deadly);
 		// atari.addObject(newgrounds);
 		int numTowersMade = 0;
 		for (double i = startingX /* start at the starting x */; endingX
@@ -266,7 +273,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				numTowersMade++;
 				System.out.println(
 						"Num of towers to have total: " + numberOfTowers + " Number yet made: " + numTowersMade);
-
+				if (whichLevelCommonKnowledge == 2 || whichLevelCommonKnowledge == 3) {
+					Enemy jacobs = new Enemy(keystone.x, keystone.y - 100, 50, 50, this);
+					atari.addObject(jacobs);
+				}
 			}
 		}
 
@@ -276,7 +286,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			boolean toBot /* (to bottom) */) {
 		// must have existing block (added to atari) for reference!!!
 		// Block permanitial = initialBlock;
-		atari.addObject(referenceBlock);
+
+		// atari.addObject(referenceBlock);
 		if (toBot) {
 			for (int p = 0; Runner.height - referenceBlock.y
 					+ referenceBlock.height >= 0 /* is there vertical space left */; p++) {
@@ -353,7 +364,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	private void startLevel6(Graphics oalr) {
 		levelwasskippedto = adminSkipLevel ? true : false;
 		adminSkipLevel = false;
-		fallnow.restart();
+		fallnow.start();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
@@ -367,7 +378,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void startLevel5(Graphics oalr) {
 		levelwasskippedto = adminSkipLevel ? true : false;
 		adminSkipLevel = false;
+		fallnowcount = 0;
 		fallnow.restart();
+
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
@@ -401,7 +414,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	private void startLevel4(Graphics oalr) {
 		levelwasskippedto = adminSkipLevel ? true : false;
 		adminSkipLevel = false;
+		fallnowcount = 0;
 		fallnow.restart();
+
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
@@ -417,7 +432,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void startLevel3(Graphics oalr) {
 		levelwasskippedto = adminSkipLevel ? true : false;
 		adminSkipLevel = false;
+		fallnowcount = 0;
 		fallnow.restart();
+
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
@@ -433,7 +450,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void startLevel2(Graphics oalr) {
 		levelwasskippedto = adminSkipLevel ? true : false;
 		adminSkipLevel = false;
+		fallnowcount = 0;
 		fallnow.restart();
+
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
@@ -441,12 +460,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		ingameMessage = true;
 		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
-		Enemy jacobs = new Enemy(Runner.width / 3, (Runner.height / 8) - 50, 50, 50, this);
-		atari.addObject(jacobs);
-		jacobs.enemyonBlock = false;
+		// jacobs.enemyonBlock = false;
 		atari.addObject(morrow);
 		makeMultipleTowers(Runner.width / 3, 2 * Runner.width / 3, Runner.height / 8, 50, 50, 3, false, true);
 		masterclock.restart();
+		// System.out.println(jacobs.enemyonBlock);
 	}
 
 	public void paintComponent(Graphics oalr) {
@@ -479,7 +497,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				respawnTimer.stop();
 
 				fallnow.stop();
-				fallnowcount = 0;
+
 				morrow.timesdied++;
 				morrow.lives--;
 				sixer = null;
@@ -525,6 +543,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 
 		if (e.getSource() == fallnow) {
+			inJumpingProcess = true;
+
 			if (morrow != null) {
 				fallnowcount++;
 				if (fallnowcount < 8) {
@@ -534,11 +554,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 					morrow.yspeedAdder += 1;
 
 				} else {
-
+					morrow.donotfall = false;
 					fallnow.stop();
-					fallnowcount = 0;
+
+					inJumpingProcess = false;
 				}
 			}
+
 		}
 
 		if (currentState == GAME_STATE) {

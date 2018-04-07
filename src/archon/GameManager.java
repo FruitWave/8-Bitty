@@ -117,8 +117,9 @@ public class GameManager implements ActionListener {
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
 						Enemy oork = o1 instanceof Enemy ? (Enemy) o1 : (Enemy) o2;
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
-						oork.yspeedAdder = 0;
 						oork.enemyonBlock = true;
+						// System.out.println("Enemy: " + oork.y);
+						// System.out.println("Block: " + doofon.y);
 					}
 
 					if ((o1 instanceof Enemy) && (o2 instanceof Enemy)) {

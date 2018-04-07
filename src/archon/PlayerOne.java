@@ -43,7 +43,7 @@ public class PlayerOne extends GameObject implements ActionListener {
 
 		yspeed = yspeedAdder;
 		xspeed = xspeedAdder;
-		if (!donotfall) {
+		if ((!donotfall) && (!GamePanel.inJumpingProcess)) {
 			yspeed += eternalGravSpeed;
 		}
 		y += yspeed;
