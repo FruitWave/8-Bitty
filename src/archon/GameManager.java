@@ -51,7 +51,19 @@ public class GameManager implements ActionListener {
 			if (gameObject instanceof Enemy) {
 				Enemy henry = (Enemy) gameObject;
 				if (System.currentTimeMillis() - henry.enemyTimer >= enemySpawnTime) {
-					addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5));
+					String yuppa;
+					if (GamePanel.level > 5) {
+						yuppa = henry.bulletType;
+						if (yuppa.equals("minigunRight") || yuppa.equals("minigunLeft")) {
+							addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
+							addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
+							addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
+						}
+						addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
+					} else {
+						addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, null));
+					}
+
 					henry.enemyTimer = System.currentTimeMillis();
 				}
 			}
@@ -97,8 +109,7 @@ public class GameManager implements ActionListener {
 							oork.isAlive = false;
 						}
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
-						oork.yspeedAdder = 0;
-						oork.playeronBlock = true; /* unnecessary */
+						//oork.yspeedAdder = 0;
 
 						if (!GamePanel.playerupbutton && (doofon.y > oork.y)) {
 							oork.y = doofon.y - oork.height + 1;

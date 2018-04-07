@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
+import com.sun.javafx.scene.control.TableColumnSortTypeWrapper;
+
 public class Projectile extends GameObject {
 	int xspeed;
 	int yspeed;
@@ -16,22 +18,32 @@ public class Projectile extends GameObject {
 	private final static String duplicating = "duplicating";
 	private final static String randomMotion = "randomMotion";
 	boolean hasInvisiblock;
+	private final static String upwards = "upwards";
+	private final static String downwards = "downwards";
+	private final static String rightwards = "rightwards";
+	private final static String minigunLeft = "minigunLeft";
+	private final static String minigunRight = "minigunRight";
 
-	public Projectile(int x, int y, int width, int height) {
+	public Projectile(int x, int y, int width, int height, String typeToFire) {
 		super(x, y, width, height);
 		xspeed = 0;
 		yspeed = 0;
 		xspeedAdder = 0;
 		yspeedAdder = 0;
 		everyother = 0;
-
+		type = typeToFire;
 	}
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		super.update();
-		settypeandtellmove(GamePanel.level);
+		if (GamePanel.level < 5) {
+			settypeandtellmove(GamePanel.level);
+		} else {
+			advancedActions(type);
+		}
+
 		if (type.equals(allDirection)) {
 			hasInvisiblock = true;
 		} else {
@@ -39,7 +51,7 @@ public class Projectile extends GameObject {
 		}
 		yspeed = yspeedAdder;
 		xspeed = xspeedAdder;
-		if ((type != randomMotion) && (type != allDirection) && (GamePanel.level != 1)) {
+		if ((type != randomMotion) && (type != allDirection) && (GamePanel.level != 1) && (GamePanel.level <= 5)) {
 			yspeed += gravispeed;
 		}
 		x += xspeed;
@@ -68,14 +80,36 @@ public class Projectile extends GameObject {
 			type = accelerative;
 			decideXorYMotionFirst(type);
 			break;
-		case 6:
-			type = randomMotion;
-			decideXorYMotionFirst(type);
-			break;
+		/*
+		 * case 6: type = randomMotion; decideXorYMotionFirst(type); break;
+		 */
 		default:
 			break;
 		}
 
+	}
+
+	public void advancedActions(String type) {
+		switch (type) {
+		case upwards:
+			yspeedAdder = -1;
+			break;
+		case downwards:
+			yspeedAdder = 1;
+			break;
+		case rightwards:
+			xspeedAdder = 1;
+			break;
+		case minigunLeft:
+			xspeedAdder = -2;
+			break;
+		case minigunRight:
+			xspeedAdder = 2;
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	private void decideXorYMotionFirst(String typethy) {

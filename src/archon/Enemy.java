@@ -9,20 +9,24 @@ public class Enemy extends GameObject {
 	public boolean enemyonBlock;
 	GamePanel archonian;
 	long enemyTimer = 0;
+	boolean enemyPositionLocked;
+	public String bulletType;
 
-	public Enemy(int x, int y, int width, int height, GamePanel archonian) {
+	public Enemy(int x, int y, int width, int height, boolean locked, String bulletType, GamePanel archonian) {
 		super(x, y, width, height);
 		yspeed = 0;
 		xspeed = 0;
 		this.archonian = archonian;
 		gravispeed = 1;
+		enemyPositionLocked = locked;
+		this.bulletType = bulletType;
 	}
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		super.update();
-		if (!enemyonBlock) {
+		if (!enemyonBlock && !enemyPositionLocked) {
 			yspeed = gravispeed;
 		} else {
 			yspeed = 0;

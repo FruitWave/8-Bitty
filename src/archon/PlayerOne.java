@@ -46,6 +46,10 @@ public class PlayerOne extends GameObject implements ActionListener {
 		if ((!donotfall) && (!GamePanel.inJumpingProcess)) {
 			yspeed += eternalGravSpeed;
 		}
+		if ((!GamePanel.inJumpingProcess) && (yspeed < 0)) {
+			GamePanel.fallnowcount = 0;
+			GamePanel.fallnow.restart();
+		}
 		y += yspeed;
 		x += xspeed;
 		if (y > Runner.height) {

@@ -68,6 +68,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (morrow != null) {
+			if (e.getKeyCode() == KeyEvent.VK_P) {
+				JOptionPane.showMessageDialog(null, "donotfall is " + morrow.donotfall);
+			}
 			if (e.getKeyCode() == KeyEvent.VK_I) {
 				immortal = immortal == false ? true : false;
 			}
@@ -148,6 +151,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameState() {
 		if (morrow != null) {
 			if ((atari != null)) {
+				if (morrow.donotfall) {
+					morrow.yspeedAdder = 0;
+				}
 				if (morrow.yspeed >= 2) {
 					System.out.println("YSPEED IS " + morrow.yspeed);
 					morrow.yspeed = 0;
@@ -228,7 +234,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				morrow.lives = 3;
 			}
 
-			sixer = new Enemy(Runner.width - 100, 300, 50, 50, this);
+			sixer = new Enemy(Runner.width - 100, 300, 50, 50, false, null, this);
 			new_friendly = new Block(100, 400, 50, 50, true, false);
 			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, true, false);
 			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
@@ -271,10 +277,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				keystone.x = (int) i;
 				outsourceOneTowerBuild(keystone, true, deadly, toBot);
 				numTowersMade++;
-				System.out.println(
-						"Num of towers to have total: " + numberOfTowers + " Number yet made: " + numTowersMade);
+				// System.out.println(
+				// "Num of towers to have total: " + numberOfTowers + " Number yet made: " +
+				// numTowersMade);
 				if (whichLevelCommonKnowledge == 2 || whichLevelCommonKnowledge == 3) {
-					Enemy jacobs = new Enemy(keystone.x, keystone.y - 100, 50, 50, this);
+					Enemy jacobs = new Enemy(keystone.x, keystone.y - 100, 50, 50, false, null, this);
 					atari.addObject(jacobs);
 				}
 			}
@@ -361,18 +368,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	private void startLevel6(Graphics oalr) {
+	public void startLevel6(Graphics oalr) {
 		levelwasskippedto = adminSkipLevel ? true : false;
 		adminSkipLevel = false;
-		fallnow.start();
+		fallnowcount = 0;
+		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
-		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
+		morrow = new PlayerOne(10, Runner.height / 2, 50, 50, true, this, atari);
 		atari.addObject(morrow);
+		atari.addObject(new Enemy(Runner.width / 10, Runner.height / 10 * 8, 50, 50, true, "upwards", this));
+		atari.addObject(new Enemy(9 * Runner.width / 10, Runner.height / 10 * 8, 50, 50, true, "upwards", this));
+
 	}
 
 	public void startLevel5(Graphics oalr) {
@@ -380,7 +391,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		adminSkipLevel = false;
 		fallnowcount = 0;
 		fallnow.restart();
-
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
 		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
@@ -496,8 +506,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				System.out.println("Morrow is not null.");
 				respawnTimer.stop();
 
-				fallnow.stop();
-
 				morrow.timesdied++;
 				morrow.lives--;
 				sixer = null;
@@ -514,6 +522,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				ingameMessage = false;
 				levelmessage = null;
 				endNotTouched = true;
+				fallnowcount = 0;
+				fallnow.restart();
 				if (!levelwasskippedto) {
 					level = 1;
 				} else {
