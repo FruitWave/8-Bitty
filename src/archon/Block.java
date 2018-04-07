@@ -11,7 +11,6 @@ public class Block extends GameObject {
 
 	public Block(int x, int y, int width, int height, boolean lockedInPlace, boolean deadly) {
 		super(x, y, width, height);
-		System.out.println("New block!");
 		// if (lockedInPlace) {
 		eternalX = x;
 		eternalY = y;

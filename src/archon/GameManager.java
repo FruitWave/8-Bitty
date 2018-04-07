@@ -93,7 +93,7 @@ public class GameManager implements ActionListener {
 
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
 						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
-						if (doofon.deadlybedrock) {
+						if ((doofon.deadlybedrock) && (!GamePanel.immortal)) {
 							oork.isAlive = false;
 						}
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
@@ -145,7 +145,9 @@ public class GameManager implements ActionListener {
 					if (((o1 instanceof PlayerOne) && (o2 instanceof Projectile))
 							|| ((o2 instanceof PlayerOne) && (o1 instanceof Projectile))) {
 						PlayerOne onki = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
-						onki.isAlive = false;
+						if (!GamePanel.immortal) {
+							onki.isAlive = false;
+						}
 						Projectile inket = o1 instanceof Projectile ? (Projectile) o1 : (Projectile) o2;
 						inket.isAlive = false;
 					}

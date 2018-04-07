@@ -46,6 +46,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static boolean endNotTouched = true;
 	int makeTowerBlockNum;
 	static boolean restartPressed = false;
+	boolean adminSkipLevel = false;
+	static boolean immortal = false;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -65,8 +67,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (morrow != null) {
+			if (e.getKeyCode() == KeyEvent.VK_I) {
+				immortal = immortal == false ? true : false;
+			}
 			if (e.getKeyCode() == KeyEvent.VK_V) {
 				currentState = VICTORY_STATE;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_L) {
+				adminSkipLevel = true;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_T) {
 				morrow.x = Runner.width - 60;
@@ -143,21 +151,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				atari.update();
 				atari.checkCollision();
 				atari.manageEnemies();
-				// if (morrow.isAlive == false) {
-				// currentState = END_STATE;
-				// score = atari.getScore();
-				// atari.reset();
-				// tardis = new TARDIS(250, 700, 100, 100);
-				// atari.addObject(tardis);
-				// }
+
 				if (morrow.isAlive == false) {
 					respawnTimer.start();
 				}
 
-				if ((morrow.x + morrow.width >= Runner.width) && endNotTouched) {
+				if (((morrow.x + morrow.width >= Runner.width) && endNotTouched) || (adminSkipLevel)) {
 					endNotTouched = false;
 					level += 1;
 					drawandStartNextLevel = true;
+					if (adminSkipLevel) {
+						adminSkipLevel = false;
+					}
+
 				} else if (morrow.x + morrow.width < Runner.width) {
 					endNotTouched = true;
 				}
@@ -205,7 +211,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startGame(boolean fullRestarting) {
-		if (level == 1) {
+		if ((level == 1) /* && (!immortal) */) {
 			backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 			startTimeInMs = System.currentTimeMillis();
 			font1 = new Font("Arial", 0, 24);
@@ -283,16 +289,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				Block newblock = new Block(referenceBlock.x, referenceBlock.y + referenceBlock.height,
 						referenceBlock.width, referenceBlock.height, true, deadly);
 				newblock.y = referenceBlock.y + referenceBlock.height;
-				System.out.println("hi");
+
 				// new block just below reference point
 				referenceBlock = newblock;
 				// set new block to the reference point
 				atari.addObject(newblock);
-				System.out.println("added");
+
 				// add newly set new reference point
-				if (makingMultiple) {
-					System.out.println("X is " + referenceBlock.x);
-				}
+				/*
+				 * if (makingMultiple) { System.out.println("X is " + referenceBlock.x); }
+				 */
 
 			}
 		} else {
@@ -305,9 +311,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				// set new block to the reference point
 				atari.addObject(newblock);
 				// add newly set new reference point
-				if (makingMultiple) {
-					System.out.println("X is " + referenceBlock.x);
-				}
+				/*
+				 * if (makingMultiple) { System.out.println("X is " + referenceBlock.x); }
+				 */
 
 			}
 
@@ -351,17 +357,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void startLevel6(Graphics oalr) {
-		ingameMessage = true;
-		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
-		fallnow.restart();
-		startTimeInMs = System.currentTimeMillis();
-		atari.reset();
-		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
-		atari.addObject(backgrundi);
-		ingameMessage = true;
-	}
-
-	private void startLevel5(Graphics oalr) {
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
@@ -371,13 +366,35 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		for (int i = 0; i < 60; i++) {
+	}
+
+	public void startLevel5(Graphics oalr) {
+		fallnow.restart();
+		startTimeInMs = System.currentTimeMillis();
+		atari.reset();
+		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
+		atari.addObject(backgrundi);
+		ingameMessage = true;
+		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
+		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
+		atari.addObject(morrow);
+		 int dotz = (Runner.width / 9) + (Runner.height / 9);
+		//int dotz = 1000;
+		for (int i = 0; i < dotz; i++) {
 			int wow = new Random().nextInt(Runner.width);
 			int wowzer = new Random().nextInt(Runner.height);
-			int waaaaaa = new Random().nextInt(2);
-			boolean ah = waaaaaa == 0 ? true : false;
-			Block woah = new Block(wow, wowzer, 5, 5, true, ah);
-			atari.addObject(woah);
+			int waaaaaa = new Random().nextInt(5);
+			boolean ah = waaaaaa >= 0 && waaaaaa <= 3 ? true : false;
+
+			if (!(!((wow > morrow.x + morrow.width + 100) || (wow < morrow.x - 100))
+					&& !((wowzer > morrow.y + morrow.height + 100) || (wowzer < morrow.y - 100)))) {
+				//why do i need the double negative statement, as opposed to NO contraditions (!s)???
+				Block woah = new Block(wow, wowzer, 5, 5, true, ah);
+				atari.addObject(woah);
+			} else {
+				i--;
+			}
+
 		}
 
 	}
