@@ -48,6 +48,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static boolean restartPressed = false;
 	boolean adminSkipLevel = false;
 	static boolean immortal = false;
+	boolean levelwasskippedto = false;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -161,7 +162,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 					level += 1;
 					drawandStartNextLevel = true;
 					if (adminSkipLevel) {
-						adminSkipLevel = false;
+						levelwasskippedto = true;
 					}
 
 				} else if (morrow.x + morrow.width < Runner.width) {
@@ -245,7 +246,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			ingameMessage = true;
 			levelmessage = "In this level, you'll find out what to avoid, and how the game's basic physics work.";
 		} else {
-			JOptionPane.showMessageDialog(null, "LEVEL IS NOT ONE");
+			// JOptionPane.showMessageDialog(null, "LEVEL IS NOT ONE");
 		}
 	}
 
@@ -265,13 +266,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				numTowersMade++;
 				System.out.println(
 						"Num of towers to have total: " + numberOfTowers + " Number yet made: " + numTowersMade);
-
-				if ((level == 2) || (level == 3)) {
-					Enemy jacobs = new Enemy(keystone.x, startingHeight - 50, 50, 50, this);
-					atari.addObject(jacobs);
-					// there will be one less enemies than the num of towers (one tower has already
-					// been completed)
-				}
 
 			}
 		}
@@ -357,6 +351,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void startLevel6(Graphics oalr) {
+		levelwasskippedto = adminSkipLevel ? true : false;
+		adminSkipLevel = false;
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
@@ -369,6 +365,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startLevel5(Graphics oalr) {
+		levelwasskippedto = adminSkipLevel ? true : false;
+		adminSkipLevel = false;
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
@@ -378,8 +376,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		 int dotz = (Runner.width / 9) + (Runner.height / 9);
-		//int dotz = 1000;
+		int dotz = (Runner.width / 9) + (Runner.height / 9);
+		// int dotz = 1000;
 		for (int i = 0; i < dotz; i++) {
 			int wow = new Random().nextInt(Runner.width);
 			int wowzer = new Random().nextInt(Runner.height);
@@ -388,7 +386,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 			if (!(!((wow > morrow.x + morrow.width + 100) || (wow < morrow.x - 100))
 					&& !((wowzer > morrow.y + morrow.height + 100) || (wowzer < morrow.y - 100)))) {
-				//why do i need the double negative statement, as opposed to NO contraditions (!s)???
+				// why do i need the double negative statement, as opposed to NO contraditions
+				// (!s)???
 				Block woah = new Block(wow, wowzer, 5, 5, true, ah);
 				atari.addObject(woah);
 			} else {
@@ -400,6 +399,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void startLevel4(Graphics oalr) {
+		levelwasskippedto = adminSkipLevel ? true : false;
+		adminSkipLevel = false;
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
@@ -414,6 +415,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startLevel3(Graphics oalr) {
+		levelwasskippedto = adminSkipLevel ? true : false;
+		adminSkipLevel = false;
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
@@ -428,6 +431,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startLevel2(Graphics oalr) {
+		levelwasskippedto = adminSkipLevel ? true : false;
+		adminSkipLevel = false;
 		fallnow.restart();
 		startTimeInMs = System.currentTimeMillis();
 		atari.reset();
@@ -436,6 +441,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		ingameMessage = true;
 		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
+		Enemy jacobs = new Enemy(Runner.width / 3, (Runner.height / 8) - 50, 50, 50, this);
+		atari.addObject(jacobs);
+		jacobs.enemyonBlock = false;
 		atari.addObject(morrow);
 		makeMultipleTowers(Runner.width / 3, 2 * Runner.width / 3, Runner.height / 8, 50, 50, 3, false, true);
 		masterclock.restart();
@@ -480,7 +488,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				initial_onethirdblock = null;
 				initial_twothirdsblock = null;
 				playerupbutton = false;
-				level = 1;
+
 				// Timer enemspawne;
 				// int spawnedde;
 				drawandStartNextLevel = false;
@@ -488,6 +496,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				ingameMessage = false;
 				levelmessage = null;
 				endNotTouched = true;
+				if (!levelwasskippedto) {
+					level = 1;
+				} else {
+					startNextLevel(whichLevelCommonKnowledge, getGraphics());
+				}
 				if (morrow.lives <= 0) {
 					System.out.println("Morrow has " + morrow.lives + " lives.");
 					atari.reset();
