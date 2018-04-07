@@ -50,15 +50,16 @@ public class GameManager implements ActionListener {
 			GameObject gameObject = objects.get(i);
 			if (gameObject instanceof Enemy) {
 				Enemy henry = (Enemy) gameObject;
+				if (henry.bulletType.equals("minigunRight") || henry.bulletType.equals("minigunLeft")) {
+					enemySpawnTime = 300;
+				} else if (henry.bulletType.equals("upwards") || henry.bulletType.equals("downwards")
+						|| henry.bulletType.equals("rightwards")) {
+					enemySpawnTime = 1000;
+				}
 				if (System.currentTimeMillis() - henry.enemyTimer >= enemySpawnTime) {
 					String yuppa;
 					if (GamePanel.level > 5) {
 						yuppa = henry.bulletType;
-						if (yuppa.equals("minigunRight") || yuppa.equals("minigunLeft")) {
-							addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
-							addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
-							addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
-						}
 						addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
 					} else {
 						addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, null));
@@ -109,7 +110,7 @@ public class GameManager implements ActionListener {
 							oork.isAlive = false;
 						}
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
-						//oork.yspeedAdder = 0;
+						// oork.yspeedAdder = 0;
 
 						if (!GamePanel.playerupbutton && (doofon.y > oork.y)) {
 							oork.y = doofon.y - oork.height + 1;

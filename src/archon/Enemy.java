@@ -20,6 +20,9 @@ public class Enemy extends GameObject {
 		gravispeed = 1;
 		enemyPositionLocked = locked;
 		this.bulletType = bulletType;
+		if (this.bulletType == null) {
+			this.bulletType = "standard";
+		}
 	}
 
 	@Override

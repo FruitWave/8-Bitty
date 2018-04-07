@@ -11,7 +11,7 @@ public class Projectile extends GameObject {
 	int yspeed;
 	int topspeed;
 	int everyother;
-	private static String type;
+	private String type;
 	private final static String standard = "standard";
 	private final static String allDirection = "allDirection";
 	private final static String accelerative = "accelerative";

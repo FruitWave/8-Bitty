@@ -235,7 +235,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 
 			sixer = new Enemy(Runner.width - 100, 300, 50, 50, false, null, this);
-			new_friendly = new Block(100, 400, 50, 50, true, false);
+			new_friendly = new Block(100, 350, 50, 50, true, false);
 			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, true, false);
 			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
 			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
@@ -383,7 +383,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		atari.addObject(morrow);
 		atari.addObject(new Enemy(Runner.width / 10, Runner.height / 10 * 8, 50, 50, true, "upwards", this));
 		atari.addObject(new Enemy(9 * Runner.width / 10, Runner.height / 10 * 8, 50, 50, true, "upwards", this));
-
+		atari.addObject(
+				new Enemy((Runner.width / 10) + 52, Runner.height / 10 * 8, 50, 50, true, "minigunRight", this));
 	}
 
 	public void startLevel5(Graphics oalr) {
