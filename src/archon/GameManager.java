@@ -51,18 +51,20 @@ public class GameManager implements ActionListener {
 			if (gameObject instanceof Enemy) {
 				Enemy henry = (Enemy) gameObject;
 				if (henry.bulletType.equals("minigunRight") || henry.bulletType.equals("minigunLeft")) {
-					enemySpawnTime = 300;
+					enemySpawnTime = 400;
 				} else if (henry.bulletType.equals("upwards") || henry.bulletType.equals("downwards")
 						|| henry.bulletType.equals("rightwards")) {
-					enemySpawnTime = 1000;
+					enemySpawnTime = 1200;
 				}
 				if (System.currentTimeMillis() - henry.enemyTimer >= enemySpawnTime) {
 					String yuppa;
 					if (GamePanel.level > 5) {
 						yuppa = henry.bulletType;
-						addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, yuppa));
+						addObject(new Projectile(henry.x + (henry.width / 2), henry.y + (henry.height / 2), 10, 5,
+								yuppa));
 					} else {
-						addObject(new Projectile(henry.x, henry.y + (henry.height / 2), 10, 5, null));
+						addObject(
+								new Projectile(henry.x + (henry.width / 2), henry.y + (henry.height / 2), 10, 5, null));
 					}
 
 					henry.enemyTimer = System.currentTimeMillis();

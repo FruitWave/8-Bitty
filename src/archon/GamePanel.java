@@ -383,8 +383,33 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		atari.addObject(morrow);
 		atari.addObject(new Enemy(Runner.width / 10, Runner.height / 10 * 8, 50, 50, true, "upwards", this));
 		atari.addObject(new Enemy(9 * Runner.width / 10, Runner.height / 10 * 8, 50, 50, true, "upwards", this));
+		// outer upward-firing enemies
 		atari.addObject(
-				new Enemy((Runner.width / 10) + 52, Runner.height / 10 * 8, 50, 50, true, "minigunRight", this));
+				new Enemy((Runner.width / 10) + 51, Runner.height / 10 * 8, 50, 50, true, "minigunRight", this));
+		atari.addObject(
+				new Enemy(9 * (Runner.width / 10) - 51, Runner.height / 10 * 8, 50, 50, true, "minigunLeft", this));
+		// minigunners on bottom
+		atari.addObject(new Enemy((Runner.width / 10) + 101, Runner.height / 10, 50, 50, true, "downwards", this));
+		atari.addObject(new Enemy(9 * (Runner.width / 10) - 101, Runner.height / 10, 50, 50, true, "downwards", this));
+		// inner downward-firing enemies
+		atari.addObject(new Enemy(Runner.width / 4, (2 * Runner.height / 10) - 25, 50, 50, false, "rightwards", this));
+		atari.addObject(new Block(Runner.width / 4, (2 * Runner.height / 10) + 50, 50, 50, true, true));
+		// the above pair is in the middle area on the left
+		atari.addObject(
+				new Enemy(3 * Runner.width / 4, (2 * Runner.height / 10) - 25, 50, 50, false, "leftwards", this));
+		atari.addObject(new Block(3 * Runner.width / 4, (2 * Runner.height / 10) + 50, 50, 50, true, true));
+		// the above pair is in the middle area on the right
+		atari.addObject(new Block(3 * Runner.width / 8, (Runner.height / 2) - 25, 50, 50, true, true));
+		atari.addObject(new Block(5 * Runner.width / 8, (Runner.height / 2) - 25, 50, 50, true, true));
+		atari.addObject(new Block((Runner.width / 2), (Runner.height / 2) - 25, 50, 50, true, true));
+		// middle area obstacles
+		atari.addObject(new Enemy(Runner.width / 4, (8 * Runner.height / 10) - 175, 50, 50, false, "rightwards", this));
+		atari.addObject(new Block(Runner.width / 4, (8 * Runner.height / 10) - 100, 50, 50, true, true));
+		// bottom right-firing pair
+		atari.addObject(
+				new Enemy(3 * Runner.width / 4, (8 * Runner.height / 10) - 175, 50, 50, false, "leftwards", this));
+		atari.addObject(new Block(3 * Runner.width / 4, (8 * Runner.height / 10) - 100, 50, 50, true, true));
+		// bottom left-firing pair
 	}
 
 	public void startLevel5(Graphics oalr) {
@@ -561,7 +586,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				if (fallnowcount < 8) {
 					morrow.yspeedAdder -= 1;
 				} else if ((fallnowcount > 7) && (fallnowcount < 15)) {
-
 					morrow.yspeedAdder += 1;
 
 				} else {

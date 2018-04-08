@@ -20,6 +20,7 @@ public class Projectile extends GameObject {
 	boolean hasInvisiblock;
 	private final static String upwards = "upwards";
 	private final static String downwards = "downwards";
+	private final static String leftwards = "leftwards";
 	private final static String rightwards = "rightwards";
 	private final static String minigunLeft = "minigunLeft";
 	private final static String minigunRight = "minigunRight";
@@ -93,6 +94,9 @@ public class Projectile extends GameObject {
 		switch (type) {
 		case upwards:
 			yspeedAdder = -1;
+			break;
+		case leftwards:
+			xspeedAdder = -1;
 			break;
 		case downwards:
 			yspeedAdder = 1;
