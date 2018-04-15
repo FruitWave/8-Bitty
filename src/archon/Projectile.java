@@ -110,7 +110,14 @@ public class Projectile extends GameObject {
 		case minigunRight:
 			xspeedAdder = 2;
 			break;
-
+		case allDirection:
+			if (Math.abs(x - GamePanel.morrow.x) < Math.abs(y - GamePanel.morrow.y)) {
+				moveXSpeedAdder(type);
+				moveYSpeedAdder(type);
+			} else {
+				moveYSpeedAdder(type);
+				moveXSpeedAdder(type);
+			}
 		default:
 			break;
 		}

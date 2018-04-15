@@ -11,6 +11,7 @@ public class Enemy extends GameObject {
 	long enemyTimer = 0;
 	boolean enemyPositionLocked;
 	public String bulletType;
+	boolean reverseGrav = false;
 
 	public Enemy(int x, int y, int width, int height, boolean locked, String bulletType, GamePanel archonian) {
 		super(x, y, width, height);
@@ -30,7 +31,7 @@ public class Enemy extends GameObject {
 		// TODO Auto-generated method stub
 		super.update();
 		if (!enemyonBlock && !enemyPositionLocked) {
-			yspeed = gravispeed;
+			yspeed = reverseGrav ? -gravispeed : gravispeed;
 		} else {
 			yspeed = 0;
 		}
@@ -41,8 +42,16 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void draw(Graphics g) {
-		g.setColor(Color.RED);
-		g.fillRect(x, y, width, height);
+		if (GamePanel.whichLevelCommonKnowledge != 9) {
+			g.setColor(Color.RED);
+			g.fillRect(x, y, width, height);
+		} else {
+			if (bulletType.equals("allDirection")) {
+				g.setColor(Color.RED);
+				g.fillRect(x, y, width, height);
+			}
+		}
+
 		// g.drawLine(x, y, archonian.morrow.x, archonian.morrow.y);
 	}
 

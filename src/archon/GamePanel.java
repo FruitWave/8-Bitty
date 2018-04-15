@@ -346,6 +346,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		atari = new GameManager();
 		whichLevelCommonKnowledge = whichlevel;
 		// System.out.println("Level is " + whichLevelCommonKnowledge);
+		levelwasskippedto = adminSkipLevel ? true : false;
+		adminSkipLevel = false;
+		fallnowcount = 0;
+		fallnow.restart();
+		startTimeInMs = System.currentTimeMillis();
+		atari.reset();
+		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
+		atari.addObject(backgrundi);
+
 		switch (whichlevel) {
 		case 2:
 			startLevel2(oalr);
@@ -362,21 +371,87 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		case 6:
 			startLevel6(oalr);
 			break;
+		case 7:
+			startLevel7(oalr);
+			break;
+		case 8:
+			startLevel8(oalr);
+			break;
+		case 9:
+			startLevel9(oalr);
+			break;
+		case 10:
+			startLevel10(oalr);
+			break;
+		case 11:
+			startLevel11(oalr);
+			break;
+		case 12:
+			startLevel12(oalr);
+			break;
 		default:
-			JOptionPane.showMessageDialog(null, "ERROR! LEVEL IS NOT GREATER THAN ONE AND LESS THAN SEVEN");
+			JOptionPane.showMessageDialog(null, "ERROR! LEVEL IS NOT GREATER THAN ONE AND LESS THAN THIRTEEN");
 			break;
 		}
 	}
 
+	public void startLevel12(Graphics oalr) {
+		ingameMessage = false;
+	}
+
+	public void startLevel11(Graphics oalr) {
+		ingameMessage = false;
+	}
+
+	public void startLevel10(Graphics oalr) {
+		ingameMessage = false;
+	}
+
+	public void startLevel9(Graphics oalr) {
+		ingameMessage = true;
+		levelmessage = "Be carefull...they see you....";
+		morrow = new PlayerOne(100, Runner.height / 3, 50, 50, true, this, atari);
+		atari.addObject(morrow);
+		Enemy hell = new Enemy(300, Runner.height / 3, 50, 50, true, "leftwards", this);
+		Enemy negahell = new Enemy(Runner.width - 300, 2 * Runner.height / 3, 50, 50, true, "rightwards", this);
+		Enemy hellfire = new Enemy(4 * Runner.width / 5, 100, 50, 50, false, "leftwards", this);
+		Enemy fireball = new Enemy(Runner.width / 5, Runner.height - 100, 50, 50, false, "leftwards", this);
+		Enemy duonin = new Enemy((Runner.width / 2) - 50, (Runner.height / 2) - 25, 50, 50, true, "allDirection", this);
+		Enemy ninodu = new Enemy((Runner.width / 2), (Runner.height / 2) - 25, 50, 50, true, "allDirection", this);
+		atari.addObject(duonin);
+		atari.addObject(ninodu);
+		fireball.reverseGrav = true;
+		atari.addObject(fireball);
+		atari.addObject(hell);
+		atari.addObject(negahell);
+		atari.addObject(hellfire);
+	}
+
+	public void startLevel8(Graphics oalr) {
+		morrow = new PlayerOne(25, Runner.height / 2, 50, 50, true, this, atari);
+		atari.addObject(morrow);
+		int startingheight = 150;
+		for (int i = startingheight; i < Runner.height - startingheight; i += 50) {
+			Enemy end = new Enemy(i + Runner.width / 2, i, 50, 50, true, "minigunLeft", this);
+			atari.addObject(end);
+			if (morrow.x > end.x) {
+				end.bulletType = "minigunRight";
+			}
+		}
+	}
+
+	public void startLevel7(Graphics oalr) {
+		ingameMessage = false;
+		morrow = new PlayerOne((Runner.width / 2) - 25, Runner.height / 2, 50, 50, true, this, atari);
+		atari.addObject(morrow);
+		for (int i = 0; i < 4; i++) {
+			atari.addObject(new Enemy(new Random().nextInt(Runner.width - 50), new Random().nextInt(Runner.height - 50),
+					50, 50, true, "allDirection", this));
+		}
+
+	}
+
 	public void startLevel6(Graphics oalr) {
-		levelwasskippedto = adminSkipLevel ? true : false;
-		adminSkipLevel = false;
-		fallnowcount = 0;
-		fallnow.restart();
-		startTimeInMs = System.currentTimeMillis();
-		atari.reset();
-		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
-		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 		morrow = new PlayerOne(10, Runner.height / 2, 50, 50, true, this, atari);
@@ -413,19 +488,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startLevel5(Graphics oalr) {
-		levelwasskippedto = adminSkipLevel ? true : false;
-		adminSkipLevel = false;
-		fallnowcount = 0;
-		fallnow.restart();
-		startTimeInMs = System.currentTimeMillis();
-		atari.reset();
-		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
-		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "Conglaturations! You have made it to Level " + whichLevelCommonKnowledge + "!!!";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
 		atari.addObject(morrow);
-		int dotz = (Runner.width / 9) + (Runner.height / 9);
+		int dotz = (Runner.width / 19) + (Runner.height / 19);
 		// int dotz = 1000;
 		for (int i = 0; i < dotz; i++) {
 			int wow = new Random().nextInt(Runner.width);
@@ -448,15 +515,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void startLevel4(Graphics oalr) {
-		levelwasskippedto = adminSkipLevel ? true : false;
-		adminSkipLevel = false;
-		fallnowcount = 0;
-		fallnow.restart();
-
-		startTimeInMs = System.currentTimeMillis();
-		atari.reset();
-		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
-		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "Don't touch the don't-touchies.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
@@ -466,15 +524,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startLevel3(Graphics oalr) {
-		levelwasskippedto = adminSkipLevel ? true : false;
-		adminSkipLevel = false;
-		fallnowcount = 0;
-		fallnow.restart();
 
-		startTimeInMs = System.currentTimeMillis();
-		atari.reset();
-		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
-		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "Now the bullets get more creative...and scary. Use your knowledge to survive and advance.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
@@ -484,19 +534,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startLevel2(Graphics oalr) {
-		levelwasskippedto = adminSkipLevel ? true : false;
-		adminSkipLevel = false;
-		fallnowcount = 0;
-		fallnow.restart();
-
-		startTimeInMs = System.currentTimeMillis();
-		atari.reset();
-		backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
-		atari.addObject(backgrundi);
 		ingameMessage = true;
 		levelmessage = "In this level, you can discover how bullets and blocks interact, as well as how your avatar can interact with blocks.";
 		morrow = new PlayerOne(200, 600, 50, 50, true, this, atari);
-		// jacobs.enemyonBlock = false;
 		atari.addObject(morrow);
 		makeMultipleTowers(Runner.width / 3, 2 * Runner.width / 3, Runner.height / 8, 50, 50, 3, false, true);
 		masterclock.restart();
