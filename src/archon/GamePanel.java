@@ -405,6 +405,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void startLevel10(Graphics oalr) {
 		ingameMessage = false;
+		morrow = new PlayerOne(0, Runner.height / 2, 5, 5, false, this, atari);
+		atari.addObject(morrow);
+		for (int i = 0; i < 5; i++) {
+			Enemy depthcharge = new Enemy(i * Runner.width / 5, Math.abs(5 - i) * Runner.height / 5, 100, 100, false,
+					"allDirection", this);
+			atari.addObject(depthcharge);
+		}
+
 	}
 
 	public void startLevel9(Graphics oalr) {
