@@ -7,8 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -54,6 +57,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	boolean levelwasskippedto = false;
 	static final String cheatcode = "noxluna";
 	static boolean cheatsenabled = false;
+	static BufferedImage morrowright;
+	static BufferedImage morrowleft;
+	static BufferedImage dirttop;
+	static BufferedImage dirttopdeadly;
+	static BufferedImage dirt;
+	static BufferedImage dirtdeadly;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -63,6 +72,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		font1 = new Font("Arial", 0, 24);
 		font2 = new Font("Arial", 0, 24);
 		// enemspawne = new Timer(700, this);
+		try {
+			morrowright = ImageIO.read(this.getClass().getResourceAsStream("MorrowRight.jpg"));
+			morrowleft = ImageIO.read(this.getClass().getResourceAsStream("MorrowLeft.jpg"));
+			dirttop = ImageIO.read(this.getClass().getResourceAsStream("DirtTop.jpg"));
+			dirttopdeadly = ImageIO.read(this.getClass().getResourceAsStream("DirtTopDeadly.jpg"));
+			dirt = ImageIO.read(this.getClass().getResourceAsStream("Dirt.jpg"));
+			dirtdeadly = ImageIO.read(this.getClass().getResourceAsStream("DirtDeadly.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -296,10 +316,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 
 			sixer = new Enemy(Runner.width - 100, 300, 50, 50, false, null, this);
-			new_friendly = new Block(100, 350, 50, 50, true, false);
-			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, true, false);
-			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false);
-			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false);
+			new_friendly = new Block(100, 350, 50, 50, true, false, true);
+			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, true, false, true);
+			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false, true);
+			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false, true);
 			/* spawnedde = 0; */
 			atari = new GameManager();
 			atari.addObject(backgrundi);
@@ -326,7 +346,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	public void makeMultipleTowers(int startingX, int endingX, int startingHeight, int width, int height,
 			int numberOfTowers, boolean deadly, boolean toBot) {
-		Block keystone = new Block(startingX, startingHeight - height, width, height, true, deadly);
+		Block keystone = new Block(startingX, startingHeight - height, width, height, true, deadly, true);
 		// atari.addObject(newgrounds);
 		int numTowersMade = 0;
 		for (double i = startingX /* start at the starting x */; endingX
@@ -360,7 +380,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			for (int p = 0; Runner.height - referenceBlock.y
 					+ referenceBlock.height >= 0 /* is there vertical space left */; p++) {
 				Block newblock = new Block(referenceBlock.x, referenceBlock.y + referenceBlock.height,
-						referenceBlock.width, referenceBlock.height, true, deadly);
+						referenceBlock.width, referenceBlock.height, true, deadly, false);
 				newblock.y = referenceBlock.y + referenceBlock.height;
 
 				// new block just below reference point
@@ -377,7 +397,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		} else {
 			for (int pr = 0; referenceBlock.y > 0 /* is there vertical space left */; pr++) {
 				Block newblock = new Block(referenceBlock.x, referenceBlock.y - referenceBlock.height,
-						referenceBlock.width, referenceBlock.height, true, deadly);
+						referenceBlock.width, referenceBlock.height, true, deadly, false);
 				newblock.y = referenceBlock.y - referenceBlock.height;
 				// new block just below reference point
 				referenceBlock = newblock;
@@ -526,22 +546,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		atari.addObject(new Enemy(9 * (Runner.width / 10) - 101, Runner.height / 10, 50, 50, true, "downwards", this));
 		// inner downward-firing enemies
 		atari.addObject(new Enemy(Runner.width / 4, (2 * Runner.height / 10) - 25, 50, 50, false, "rightwards", this));
-		atari.addObject(new Block(Runner.width / 4, (2 * Runner.height / 10) + 50, 50, 50, true, true));
+		atari.addObject(new Block(Runner.width / 4, (2 * Runner.height / 10) + 50, 50, 50, true, true, true));
 		// the above pair is in the middle area on the left
 		atari.addObject(
 				new Enemy(3 * Runner.width / 4, (2 * Runner.height / 10) - 25, 50, 50, false, "leftwards", this));
-		atari.addObject(new Block(3 * Runner.width / 4, (2 * Runner.height / 10) + 50, 50, 50, true, true));
+		atari.addObject(new Block(3 * Runner.width / 4, (2 * Runner.height / 10) + 50, 50, 50, true, true, true));
 		// the above pair is in the middle area on the right
-		atari.addObject(new Block(3 * Runner.width / 8, (Runner.height / 2) - 25, 50, 50, true, true));
-		atari.addObject(new Block(5 * Runner.width / 8, (Runner.height / 2) - 25, 50, 50, true, true));
-		atari.addObject(new Block((Runner.width / 2), (Runner.height / 2) - 25, 50, 50, true, true));
+		atari.addObject(new Block(3 * Runner.width / 8, (Runner.height / 2) - 25, 50, 50, true, true, true));
+		atari.addObject(new Block(5 * Runner.width / 8, (Runner.height / 2) - 25, 50, 50, true, true, true));
+		atari.addObject(new Block((Runner.width / 2), (Runner.height / 2) - 25, 50, 50, true, true, true));
 		// middle area obstacles
 		atari.addObject(new Enemy(Runner.width / 4, (8 * Runner.height / 10) - 175, 50, 50, false, "rightwards", this));
-		atari.addObject(new Block(Runner.width / 4, (8 * Runner.height / 10) - 100, 50, 50, true, true));
+		atari.addObject(new Block(Runner.width / 4, (8 * Runner.height / 10) - 100, 50, 50, true, true, true));
 		// bottom right-firing pair
 		atari.addObject(
 				new Enemy(3 * Runner.width / 4, (8 * Runner.height / 10) - 175, 50, 50, false, "leftwards", this));
-		atari.addObject(new Block(3 * Runner.width / 4, (8 * Runner.height / 10) - 100, 50, 50, true, true));
+		atari.addObject(new Block(3 * Runner.width / 4, (8 * Runner.height / 10) - 100, 50, 50, true, true, true));
 		// bottom left-firing pair
 	}
 
@@ -562,7 +582,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 					&& !((wowzer > morrow.y + morrow.height + 100) || (wowzer < morrow.y - 100)))) {
 				// why do i need the double negative statement, as opposed to NO contraditions
 				// (!s)???
-				Block woah = new Block(wow, wowzer, 5, 5, true, ah);
+				Block woah = new Block(wow, wowzer, 5, 5, true, ah, true);
 				atari.addObject(woah);
 			} else {
 				i--;

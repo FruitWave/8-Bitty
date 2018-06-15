@@ -12,7 +12,8 @@ import javax.swing.Timer;
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 public class PlayerOne extends GameObject implements ActionListener {
-
+	int imagewidth;
+	int imageheight;
 	int yspeed;
 	int xspeed;
 	GamePanel panelope;
@@ -59,9 +60,17 @@ public class PlayerOne extends GameObject implements ActionListener {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		g.setColor(Color.cyan);
-		g.fillRect(x, y, width, height);
+	public void draw(Graphics garbazon) {
+		if ((xspeed > 0) || (xspeed == 0)) {
+			// imagewidth = GamePanel.morrowright.getWidth();
+			// imageheight = GamePanel.morrowright.getHeight();
+			garbazon.drawImage(GamePanel.morrowright, x, y, width, height, null);
+		} else {
+			// imagewidth = GamePanel.morrowleft.getWidth();
+			// imageheight = GamePanel.morrowleft.getHeight();
+			garbazon.drawImage(GamePanel.morrowleft, x, y, width, height, null);
+		}
+
 	}
 
 	@Override

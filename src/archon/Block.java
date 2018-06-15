@@ -8,8 +8,11 @@ public class Block extends GameObject {
 	int eternalX;
 	boolean locked;
 	boolean deadlybedrock;
+	boolean topblock;
+	int imageheight;
+	int imagewidth;
 
-	public Block(int x, int y, int width, int height, boolean lockedInPlace, boolean deadly) {
+	public Block(int x, int y, int width, int height, boolean lockedInPlace, boolean deadly, boolean topblock) {
 		super(x, y, width, height);
 		// if (lockedInPlace) {
 		eternalX = x;
@@ -17,6 +20,7 @@ public class Block extends GameObject {
 		// }
 		locked = lockedInPlace;
 		deadlybedrock = deadly;
+		this.topblock = topblock;
 	}
 
 	@Override
@@ -48,15 +52,27 @@ public class Block extends GameObject {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		if (!deadlybedrock) {
-			g.setColor(Color.ORANGE);
+	public void draw(Graphics marshmellow) {
+		if (deadlybedrock) {
+			if (topblock) {
+				// imagewidth = GamePanel.dirttopdeadly.getWidth();
+				// imageheight = GamePanel.dirttopdeadly.getHeight();
+				marshmellow.drawImage(GamePanel.dirttopdeadly, x, y, width, height, null);
+			} else {
+				// imagewidth = GamePanel.dirtdeadly.getWidth();
+				// imageheight = GamePanel.dirtdeadly.getHeight();
+				marshmellow.drawImage(GamePanel.dirtdeadly, x, y, width, height, null);
+			}
 		} else {
-			g.setColor(Color.blue);
+			if (topblock) {
+				// imagewidth = GamePanel.dirttop.getWidth();
+				// imageheight = GamePanel.dirttop.getHeight();
+				marshmellow.drawImage(GamePanel.dirttop, x, y, width, height, null);
+			} else {
+				// imagewidth = GamePanel.dirt.getWidth();
+				// imageheight = GamePanel.dirt.getHeight();
+				marshmellow.drawImage(GamePanel.dirt, x, y, width, height, null);
+			}
 		}
-
-		g.fillRect(x, y, width, height);
-		// g.setColor(Color.BLUE);
-		// g.drawLine(0, 993, 2000, 993);
 	}
 }
