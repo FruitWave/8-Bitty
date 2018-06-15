@@ -79,7 +79,7 @@ public class GameManager implements ActionListener {
 
 					henry.enemyTimer = System.currentTimeMillis();
 				}
-				
+
 			}
 		}
 

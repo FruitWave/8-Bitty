@@ -63,6 +63,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static BufferedImage dirttopdeadly;
 	static BufferedImage dirt;
 	static BufferedImage dirtdeadly;
+	static BufferedImage enemy;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -79,6 +80,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			dirttopdeadly = ImageIO.read(this.getClass().getResourceAsStream("DirtTopDeadly.jpg"));
 			dirt = ImageIO.read(this.getClass().getResourceAsStream("Dirt.jpg"));
 			dirtdeadly = ImageIO.read(this.getClass().getResourceAsStream("DirtDeadly.jpg"));
+			enemy = ImageIO.read(this.getClass().getResourceAsStream("Enemy.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -316,7 +318,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 
 			sixer = new Enemy(Runner.width - 100, 300, 50, 50, false, null, this);
-			new_friendly = new Block(100, 350, 50, 50, true, false, true);
+			new_friendly = new Block(100, 400, 50, 50, true, false, true);
+
 			initial_enemyblock1 = new Block(Runner.width - 100, 400, 50, 50, true, false, true);
 			initial_onethirdblock = new Block(Runner.width / 3, 400, 50, 50, false, false, true);
 			initial_twothirdsblock = new Block(Runner.width * 2 / 3, 400, 50, 50, false, false, true);
@@ -330,6 +333,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			atari.addObject(initial_enemyblock1);
 			atari.addObject(initial_onethirdblock);
 			atari.addObject(initial_twothirdsblock);
+			atari.addObject(new_friendly);
 			outsourceOneTowerBuild(new_friendly, false, false, true);
 
 			// makeTowers(false, new_friendly.x, new_friendly.x, new_friendly.y, 1);
@@ -344,10 +348,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	public void makeMultipleTowers(int startingX, int endingX, int startingHeight, int width, int height,
+	public void makeMultipleTowers(int startingX, int endingX, int startingHeight, int widthOfBlock, int heightOfBlock,
 			int numberOfTowers, boolean deadly, boolean toBot) {
-		Block keystone = new Block(startingX, startingHeight - height, width, height, true, deadly, true);
-		// atari.addObject(newgrounds);
+		startingHeight += heightOfBlock;
+		Block keystone = new Block(startingX, startingHeight, widthOfBlock, heightOfBlock, true, deadly, true);
+
 		int numTowersMade = 0;
 		for (double i = startingX /* start at the starting x */; endingX
 				- i >= 0 /* as long as there is space, continue */; i += (endingX - startingX)
@@ -356,13 +361,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			// - 1)));
 			if (numTowersMade < numberOfTowers /* if the number of towers quota is not filled, continue */) {
 				keystone.x = (int) i;
+				// atari.addObject(keystone);
 				outsourceOneTowerBuild(keystone, true, deadly, toBot);
 				numTowersMade++;
 				// System.out.println(
 				// "Num of towers to have total: " + numberOfTowers + " Number yet made: " +
 				// numTowersMade);
 				if (whichLevelCommonKnowledge == 2 || whichLevelCommonKnowledge == 3) {
-					Enemy jacobs = new Enemy(keystone.x, keystone.y - 100, 50, 50, false, null, this);
+					Enemy jacobs = new Enemy(keystone.x, keystone.y - 150, 50, 50, false, null, this);
 					atari.addObject(jacobs);
 				}
 			}
@@ -374,13 +380,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			boolean toBot /* (to bottom) */) {
 		// must have existing block (added to atari) for reference!!!
 		// Block permanitial = initialBlock;
-
-		// atari.addObject(referenceBlock);
 		if (toBot) {
 			for (int p = 0; Runner.height - referenceBlock.y
 					+ referenceBlock.height >= 0 /* is there vertical space left */; p++) {
-				Block newblock = new Block(referenceBlock.x, referenceBlock.y + referenceBlock.height,
-						referenceBlock.width, referenceBlock.height, true, deadly, false);
+				Block newblock;
+				if (makingMultiple && (p == 0)) {
+					newblock = new Block(referenceBlock.x, referenceBlock.y + referenceBlock.height,
+							referenceBlock.width, referenceBlock.height, true, deadly, true);
+				} else {
+					newblock = new Block(referenceBlock.x, referenceBlock.y + referenceBlock.height,
+							referenceBlock.width, referenceBlock.height, true, deadly, false);
+				}
 				newblock.y = referenceBlock.y + referenceBlock.height;
 
 				// new block just below reference point

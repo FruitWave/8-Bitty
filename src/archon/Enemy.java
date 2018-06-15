@@ -41,18 +41,8 @@ public class Enemy extends GameObject {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		if (GamePanel.whichLevelCommonKnowledge != 9) {
-			g.setColor(Color.RED);
-			g.fillRect(x, y, width, height);
-		} else {
-			if (bulletType.equals("allDirection")) {
-				g.setColor(Color.RED);
-				g.fillRect(x, y, width, height);
-			}
-		}
-
-		// g.drawLine(x, y, archonian.morrow.x, archonian.morrow.y);
+	public void draw(Graphics godzilla) {
+		godzilla.drawImage(GamePanel.enemy, x, y, width, height, null);
 	}
 
 }
