@@ -17,6 +17,7 @@ import javax.swing.Timer;
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer masterclock;
 	GameManager atari;
+	boolean initialstart = true;
 	static boolean inJumpingProcess;
 	static PlayerOne morrow;
 	static Enemy sixer;
@@ -29,9 +30,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static boolean playerupbutton;
 	static Timer respawnTimer;
 	static int currentState = 1;
+	final static int INFO_STATE = 0;
 	final static int GAME_STATE = 1;
-	final static int VICTORY_STATE = 4;
 	final static int END_STATE = 3;
+	final static int VICTORY_STATE = 2;
+	Color olive = new Color(30, 128, 30);
 	Font font1;
 	Font font2;
 	double startTimeInMs;
@@ -49,6 +52,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	boolean adminSkipLevel = false;
 	static boolean immortal = false;
 	boolean levelwasskippedto = false;
+	static final String cheatcode = "noxluna";
+	static boolean cheatsenabled = false;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -68,20 +73,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (morrow != null) {
-			if (e.getKeyCode() == KeyEvent.VK_P) {
-				JOptionPane.showMessageDialog(null, "donotfall is " + morrow.donotfall);
-			}
 			if (e.getKeyCode() == KeyEvent.VK_I) {
-				immortal = immortal == false ? true : false;
+				if (currentState != END_STATE) {
+					currentState = currentState == INFO_STATE ? GAME_STATE : INFO_STATE;
+				}
 			}
-			if (e.getKeyCode() == KeyEvent.VK_V) {
-				currentState = VICTORY_STATE;
-			}
-			if (e.getKeyCode() == KeyEvent.VK_L) {
-				adminSkipLevel = true;
-			}
-			if (e.getKeyCode() == KeyEvent.VK_T) {
-				morrow.x = Runner.width - 60;
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				String czechthis = JOptionPane.showInputDialog("Enter your cheat code below.");
+				if (czechthis.equalsIgnoreCase(cheatcode)) {
+					cheatsenabled = true;
+				}
 			}
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 				restartPressed = true;
@@ -100,6 +101,24 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				morrow.xspeedAdder = 2;
 			}
+			if (cheatsenabled) {
+				if (e.getKeyCode() == KeyEvent.VK_P) {
+					JOptionPane.showMessageDialog(null, "donotfall is " + morrow.donotfall);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_A) {
+					immortal = immortal == false ? true : false;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_V) {
+					currentState = VICTORY_STATE;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_L) {
+					adminSkipLevel = true;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_T) {
+					morrow.x = Runner.width - 60;
+				}
+			}
+
 		}
 	}
 
@@ -117,7 +136,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	void drawVictoryState(Graphics anki) {
 		anki.setColor(Color.BLACK);
-		anki.drawRect(0, 0, Runner.width, Runner.height);
+		anki.fillRect(0, 0, Runner.width, Runner.height);
 		for (int i = 0; i < 30; i++) {
 			int rundoe = new Random().nextInt(6);
 			anki.setColor(setRandomColor(rundoe));
@@ -212,8 +231,46 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 	}
 
-	void drawEndState(Graphics elevi) {
+	private void drawInformationState(Graphics oalr) {
+		oalr.setColor(Color.black);
+		oalr.fillRect(0, 0, Runner.width, Runner.height);
+		oalr.setFont(font1);
+		oalr.setColor(olive);
+		oalr.drawString("Welcome to the Information Panel", Runner.width / 20, Runner.height / 10);
+		oalr.drawString("Use the UP, LEFT, and RIGHT arrow keys to move", Runner.width / 20, (Runner.height / 10) * 2);
+		oalr.drawString("Hit the right side of the window to progress to the next level", Runner.width / 20,
+				(Runner.height / 10) * 3);
+		oalr.drawString(
+				"DO NOT HOLD ANY LETTER KEYS DOWN (you can hold arrow keys down). DOING SO WILL LOCK YOUR KEYBOARD.",
+				Runner.width / 20, (Runner.height / 10) * 4);
+		oalr.drawString("Hit 'r' to restart", Runner.width / 20, (Runner.height / 10) * 5);
+		oalr.drawString(
+				"You will not be given any more information., but will instead learn by exploring the game for yourself",
+				Runner.width / 20, (Runner.height / 10) * 6);
+		oalr.drawString(
+				"Press 'i' to re-open this panel from in-game (this will pause the game), and 'i' right now to close this panel and unpause the game",
+				Runner.width / 20, (Runner.height / 10) * 7);
+		oalr.setColor(Color.red);
+		oalr.drawString(
+				"LAST BUT NOT LEAST, MAJOR EPILEPSY WARNING (this really only applies to the Victory screen, but I just want to establish this anyway.",
+				Runner.width / 20, (Runner.height / 10) * 8);
+		oalr.setColor(olive);
+		oalr.drawString("Have Fun!", Runner.width / 20, (Runner.height / 10) * 9);
+		oalr.setColor(Color.darkGray);
+		if (!cheatsenabled) {
+			oalr.drawString("Enter your cheat code by pressing 'enter/return'", Runner.width / 20,
+					(Runner.height / 20) * 19);
+		} else {
+			oalr.drawString("Cheats are enabled.", Runner.width / 20, (Runner.height / 20) * 19);
+		}
 
+	}
+
+	private void updateInformationState() {
+
+	}
+
+	void drawEndState(Graphics elevi) {
 		elevi.setColor(Color.black);
 		elevi.fillRect(0, 0, Runner.width, Runner.height);
 		elevi.setColor(Color.CYAN);
@@ -225,7 +282,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void startGame(boolean fullRestarting) {
-		if ((level == 1) /* && (!immortal) */) {
+		if (initialstart == true) {
+			initialstart = false;
+			currentState = INFO_STATE;
+		}
+		if ((level == 1)) {
 			backgrundi = new Backburner(0, 0, Runner.width, Runner.height);
 			startTimeInMs = System.currentTimeMillis();
 			font1 = new Font("Arial", 0, 24);
@@ -384,23 +445,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			startLevel10(oalr);
 			break;
 		case 11:
-			startLevel11(oalr);
-			break;
-		case 12:
-			startLevel12(oalr);
+			currentState = VICTORY_STATE;
 			break;
 		default:
-			JOptionPane.showMessageDialog(null, "ERROR! LEVEL IS NOT GREATER THAN ONE AND LESS THAN THIRTEEN");
+			JOptionPane.showMessageDialog(null, "ERROR! LEVEL IS NOT GREATER THAN ONE AND LESS THAN 12");
 			break;
 		}
-	}
-
-	public void startLevel12(Graphics oalr) {
-		ingameMessage = false;
-	}
-
-	public void startLevel11(Graphics oalr) {
-		ingameMessage = false;
 	}
 
 	public void startLevel10(Graphics oalr) {
@@ -556,7 +606,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			drawandStartNextLevel = false;
 			startNextLevel(level, oalr);
 		}
-		if (currentState == GAME_STATE) {
+		if (currentState == INFO_STATE) {
+			drawInformationState(oalr);
+		} else if (currentState == GAME_STATE) {
 			drawGameState(oalr);
 		} else if (currentState == END_STATE) {
 			drawEndState(oalr);
@@ -650,6 +702,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			updateGameState();
 		} else if (currentState == END_STATE) {
 			updateEndState();
+		} else if (currentState == INFO_STATE) {
+			updateInformationState();
 		} else if (currentState == VICTORY_STATE) {
 			updateVictoryState();
 		}
