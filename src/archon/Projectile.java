@@ -195,8 +195,7 @@ public class Projectile extends GameObject {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		g.setColor(Color.green);
-		g.fillRect(x, y, width, height);
+	public void draw(Graphics geegee) {
+		geegee.drawImage(GamePanel.bullet, x, y, width, height, null);
 	}
 }

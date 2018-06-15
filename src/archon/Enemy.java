@@ -42,7 +42,10 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void draw(Graphics godzilla) {
-		godzilla.drawImage(GamePanel.enemy, x, y, width, height, null);
+		if (GamePanel.whichLevelCommonKnowledge != 9) {
+			godzilla.drawImage(GamePanel.enemy, x, y, width, height, null);
+		}
+
 	}
 
 }

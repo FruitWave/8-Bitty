@@ -64,6 +64,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static BufferedImage dirt;
 	static BufferedImage dirtdeadly;
 	static BufferedImage enemy;
+	static BufferedImage bullet;
 
 	public GamePanel() {
 		masterclock = new Timer(1000 / 120, this);
@@ -81,6 +82,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			dirt = ImageIO.read(this.getClass().getResourceAsStream("Dirt.jpg"));
 			dirtdeadly = ImageIO.read(this.getClass().getResourceAsStream("DirtDeadly.jpg"));
 			enemy = ImageIO.read(this.getClass().getResourceAsStream("Enemy.jpg"));
+			bullet = ImageIO.read(this.getClass().getResourceAsStream("Bullet.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
