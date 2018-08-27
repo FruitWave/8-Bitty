@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
-public class GamePanel extends JPanel implements ActionListener, KeyListener {
+public class Panel extends JPanel implements ActionListener, KeyListener {
 	Timer masterclock;
 	GameManager atari;
 	boolean initialstart = true;
@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	static BufferedImage enemy;
 	static BufferedImage bullet;
 
-	public GamePanel() {
+	public Panel() {
 		masterclock = new Timer(1000 / 120, this);
 		fallnow = new Timer(10, this);
 		respawnTimer = new Timer(5, this);

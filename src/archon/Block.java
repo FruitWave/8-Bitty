@@ -57,21 +57,21 @@ public class Block extends GameObject {
 			if (topblock) {
 				// imagewidth = GamePanel.dirttopdeadly.getWidth();
 				// imageheight = GamePanel.dirttopdeadly.getHeight();
-				marshmellow.drawImage(GamePanel.dirttopdeadly, x, y, width, height, null);
+				marshmellow.drawImage(Panel.dirttopdeadly, x, y, width, height, null);
 			} else {
 				// imagewidth = GamePanel.dirtdeadly.getWidth();
 				// imageheight = GamePanel.dirtdeadly.getHeight();
-				marshmellow.drawImage(GamePanel.dirtdeadly, x, y, width, height, null);
+				marshmellow.drawImage(Panel.dirtdeadly, x, y, width, height, null);
 			}
 		} else {
 			if (topblock) {
 				// imagewidth = GamePanel.dirttop.getWidth();
 				// imageheight = GamePanel.dirttop.getHeight();
-				marshmellow.drawImage(GamePanel.dirttop, x, y, width, height, null);
+				marshmellow.drawImage(Panel.dirttop, x, y, width, height, null);
 			} else {
 				// imagewidth = GamePanel.dirt.getWidth();
 				// imageheight = GamePanel.dirt.getHeight();
-				marshmellow.drawImage(GamePanel.dirt, x, y, width, height, null);
+				marshmellow.drawImage(Panel.dirt, x, y, width, height, null);
 			}
 		}
 	}

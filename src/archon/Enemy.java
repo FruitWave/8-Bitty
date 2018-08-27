@@ -7,13 +7,13 @@ public class Enemy extends GameObject {
 	int xspeed;
 	int yspeed;
 	public boolean enemyonBlock;
-	GamePanel archonian;
+	Panel archonian;
 	long enemyTimer = 0;
 	boolean enemyPositionLocked;
 	public String bulletType;
 	boolean reverseGrav = false;
 
-	public Enemy(int x, int y, int width, int height, boolean locked, String bulletType, GamePanel archonian) {
+	public Enemy(int x, int y, int width, int height, boolean locked, String bulletType, Panel archonian) {
 		super(x, y, width, height);
 		yspeed = 0;
 		xspeed = 0;
@@ -42,8 +42,8 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void draw(Graphics godzilla) {
-		if (GamePanel.whichLevelCommonKnowledge != 9) {
-			godzilla.drawImage(GamePanel.enemy, x, y, width, height, null);
+		if (Panel.whichLevelCommonKnowledge != 9) {
+			godzilla.drawImage(Panel.enemy, x, y, width, height, null);
 		}
 
 	}

@@ -11,11 +11,11 @@ public class Runner {
 	// java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
 	static final int width = 1920;
 	static final int height = 1044;
-	GamePanel panelope;
+	Panel panelope;
 
 	public Runner() {
 		sym = new JFrame();
-		panelope = new GamePanel();
+		panelope = new Panel();
 		run();
 	}
 

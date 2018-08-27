@@ -16,7 +16,7 @@ public class PlayerOne extends GameObject implements ActionListener {
 	int imageheight;
 	int yspeed;
 	int xspeed;
-	GamePanel panelope;
+	Panel panelope;
 	public boolean playeronBlock;
 	static Timer turngravbackon;
 	static int jumpCount = 0;
@@ -26,7 +26,7 @@ public class PlayerOne extends GameObject implements ActionListener {
 	boolean donotfall = false;
 	final int eternalGravSpeed = gravispeed;
 
-	public PlayerOne(int x, int y, int width, int height, boolean gravAffectedMaster, GamePanel panelope,
+	public PlayerOne(int x, int y, int width, int height, boolean gravAffectedMaster, Panel panelope,
 			GameManager master) {
 		super(x, y, width, height);
 		yspeed = 0;
@@ -44,12 +44,12 @@ public class PlayerOne extends GameObject implements ActionListener {
 
 		yspeed = yspeedAdder;
 		xspeed = xspeedAdder;
-		if ((!donotfall) && (!GamePanel.inJumpingProcess)) {
+		if ((!donotfall) && (!Panel.inJumpingProcess)) {
 			yspeed += eternalGravSpeed;
 		}
-		if ((!GamePanel.inJumpingProcess) && (yspeedAdder < 0)) {
-			GamePanel.fallnowcount = 0;
-			GamePanel.fallnow.stop();
+		if ((!Panel.inJumpingProcess) && (yspeedAdder < 0)) {
+			Panel.fallnowcount = 0;
+			Panel.fallnow.stop();
 			yspeedAdder = 0;
 		}
 		y += yspeed;
@@ -64,11 +64,11 @@ public class PlayerOne extends GameObject implements ActionListener {
 		if ((xspeed > 0) || (xspeed == 0)) {
 			// imagewidth = GamePanel.morrowright.getWidth();
 			// imageheight = GamePanel.morrowright.getHeight();
-			garbazon.drawImage(GamePanel.morrowright, x, y, width, height, null);
+			garbazon.drawImage(Panel.morrowright, x, y, width, height, null);
 		} else {
 			// imagewidth = GamePanel.morrowleft.getWidth();
 			// imageheight = GamePanel.morrowleft.getHeight();
-			garbazon.drawImage(GamePanel.morrowleft, x, y, width, height, null);
+			garbazon.drawImage(Panel.morrowleft, x, y, width, height, null);
 		}
 
 	}

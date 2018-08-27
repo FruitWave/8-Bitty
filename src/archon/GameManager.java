@@ -52,14 +52,14 @@ public class GameManager implements ActionListener {
 				Enemy henry = (Enemy) gameObject;
 				if (henry.bulletType.equals("minigunRight") || henry.bulletType.equals("minigunLeft")) {
 					enemySpawnTime = 400;
-				} else if ((GamePanel.whichLevelCommonKnowledge == 9)
+				} else if ((Panel.whichLevelCommonKnowledge == 9)
 						&& ((henry.bulletType.equals("leftwards")) || (henry.bulletType.equals("rightwards")))) {
 					enemySpawnTime = 600;
 				} else if (henry.bulletType.equals("upwards") || henry.bulletType.equals("downwards")
 						|| henry.bulletType.equals("rightwards")) {
 					enemySpawnTime = 1200;
 				} else if (henry.bulletType.equals("allDirection")) {
-					if (GamePanel.whichLevelCommonKnowledge == 9) {
+					if (Panel.whichLevelCommonKnowledge == 9) {
 						enemySpawnTime = 10000;
 					} else {
 						enemySpawnTime = 2000;
@@ -68,7 +68,7 @@ public class GameManager implements ActionListener {
 				}
 				if (System.currentTimeMillis() - henry.enemyTimer >= enemySpawnTime) {
 					String yuppa;
-					if (GamePanel.level > 5) {
+					if (Panel.level > 5) {
 						yuppa = henry.bulletType;
 						addObject(new Projectile(henry.x + (henry.width / 2), henry.y + (henry.height / 2), 10, 5,
 								yuppa));
@@ -119,21 +119,21 @@ public class GameManager implements ActionListener {
 
 						Block doofon = o1 instanceof Block ? (Block) o1 : (Block) o2;
 						PlayerOne oork = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
-						if ((doofon.deadlybedrock) && (!GamePanel.immortal)) {
+						if ((doofon.deadlybedrock) && (!Panel.immortal)) {
 							oork.isAlive = false;
 						}
 						// System.out.println("Collision. Y speed is " + oork.yspeed);
 						// oork.yspeedAdder = 0;
 
-						if (!GamePanel.playerupbutton && (doofon.y > oork.y)) {
+						if (!Panel.playerupbutton && (doofon.y > oork.y)) {
 							oork.y = doofon.y - oork.height + 1;
 							oork.donotfall = true;
-						} else if (GamePanel.playerupbutton) {
+						} else if (Panel.playerupbutton) {
 							oork.y = doofon.y - oork.height;
 							oork.donotfall = false;
 						}
 					} else {
-						GamePanel.morrow.donotfall = false;
+						Panel.morrow.donotfall = false;
 					}
 
 					if (((o1 instanceof Enemy) && (o2 instanceof Block))
@@ -171,7 +171,7 @@ public class GameManager implements ActionListener {
 					if (((o1 instanceof PlayerOne) && (o2 instanceof Projectile))
 							|| ((o2 instanceof PlayerOne) && (o1 instanceof Projectile))) {
 						PlayerOne onki = o1 instanceof PlayerOne ? (PlayerOne) o1 : (PlayerOne) o2;
-						if (!GamePanel.immortal) {
+						if (!Panel.immortal) {
 							onki.isAlive = false;
 						}
 						Projectile inket = o1 instanceof Projectile ? (Projectile) o1 : (Projectile) o2;
